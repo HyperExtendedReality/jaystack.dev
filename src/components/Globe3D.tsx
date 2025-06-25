@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 
 const Globe3D = () => {
@@ -18,8 +17,8 @@ const Globe3D = () => {
     let rotationX = 0;
     let rotationY = 0;
     
-    // Major cities and their approximate coordinates
-    const cities = [
+    // Major cities and their approximate coordinates with proper typing
+    const cities: Array<{ name: string; lat: number; lng: number; type: 'server' | 'client' }> = [
       { name: 'New York', lat: 40.7128, lng: -74.0060, type: 'server' },
       { name: 'London', lat: 51.5074, lng: -0.1278, type: 'server' },
       { name: 'Tokyo', lat: 35.6762, lng: 139.6503, type: 'server' },
@@ -40,7 +39,7 @@ const Globe3D = () => {
       { name: 'Berlin', lat: 52.5200, lng: 13.4050, type: 'server' },
       { name: 'Paris', lat: 48.8566, lng: 2.3522, type: 'client' },
       { name: 'Amsterdam', lat: 52.3676, lng: 4.9041, type: 'server' }
-    ];
+    ] as const;
 
     const connections: Array<{ 
       from: number; 
