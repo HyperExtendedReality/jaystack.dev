@@ -18,7 +18,7 @@ type Continent = 'North America' | 'South America' | 'Europe' | 'Africa' | 'Asia
 const getContinent = (lng: number): Continent => {
     if (lng > -125 && lng < -66) return 'North America';
     if (lng > -81 && lng < -34) return 'South America';
-    if (lng > -10 && lng < 44) return 'Europe'; // Europe/Africa
+    if (lng > -10 && lng < 44) return 'Europe'; // Europe/Africa are grouped for simplicity
     if (lng > 100 && lng < 180) return 'Oceania';
     return 'Asia'; // Asia/Africa
 };
@@ -71,42 +71,42 @@ const Globe3D = () => {
     globeGroup.rotation.z = 23.5 * (Math.PI / 180);
     scene.add(globeGroup);
 
-    // Globe Layers
+    // --- Globe Layers ---
+    
     globeGroup.add(new THREE.Mesh(
       new THREE.SphereGeometry(globeRadius, 64, 64),
-      new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.0 })
+      new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.05 })
     ));
     
     const earthTexture = new THREE.TextureLoader().load('/earth-dark.jpeg');
     earthTexture.colorSpace = THREE.SRGBColorSpace;
     earthTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    globeGroup.add(new THREE.Mesh(
-      new THREE.SphereGeometry(globeRadius, 64, 64),
-      new THREE.MeshBasicMaterial({ map: earthTexture, transparent: true, opacity: 0.0 })
-    ));
     
-    // --- NEW: Faint Lat/Long Grid Lines ---
+    const earthMaterial = new THREE.MeshBasicMaterial({
+        map: earthTexture,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        color: 0x777777,
+    });
+    const earthMesh = new THREE.Mesh(new THREE.SphereGeometry(globeRadius, 64, 64), earthMaterial);
+    globeGroup.add(earthMesh);
+    
     const gridPoints: THREE.Vector3[] = [];
-    const gridRadius = globeRadius + 0.005; // Slightly above the surface
-    // Latitude lines
+    const gridRadius = globeRadius + 0.005; 
     for (let lat = -90; lat <= 90; lat += 15) {
       for (let lng = -180; lng <= 180; lng += 5) {
-        gridPoints.push(latLngToVector3(lat, lng, gridRadius));
-        gridPoints.push(latLngToVector3(lat, lng + 5, gridRadius));
+        gridPoints.push(latLngToVector3(lat, lng, gridRadius), latLngToVector3(lat, lng + 5, gridRadius));
       }
     }
-    // Longitude lines
     for (let lng = -180; lng <= 180; lng += 15) {
       for (let lat = -90; lat <= 90; lat += 5) {
-        gridPoints.push(latLngToVector3(lat, lng, gridRadius));
-        gridPoints.push(latLngToVector3(lat + 5, lng, gridRadius));
+        gridPoints.push(latLngToVector3(lat, lng, gridRadius), latLngToVector3(lat + 5, lng, gridRadius));
       }
     }
     const gridGeom = new THREE.BufferGeometry().setFromPoints(gridPoints);
-    const gridMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.1 });
+    const gridMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.05 });
     const gridLines = new THREE.LineSegments(gridGeom, gridMaterial);
     globeGroup.add(gridLines);
-
 
     const connections: Connection[] = [];
     
@@ -116,8 +116,7 @@ const Globe3D = () => {
     ]).then(([countriesData, serverJson]) => {
       const servers: Server[] = serverJson.servers;
 
-      // **ENHANCEMENT:** Bolder country lines
-      const outlineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.25 });
+      const outlineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.4 });
       const outlinePoints: THREE.Vector3[] = [];
       countriesData.features.forEach((feature: any) => {
         if (feature.geometry?.type === 'LineString') {
@@ -153,7 +152,9 @@ const Globe3D = () => {
           establishedConnections.add(key);
 
           const distance = start.vector.distanceTo(end.vector);
-          const controlPoint = start.vector.clone().lerp(end.vector, 0.5).normalize().multiplyScalar(globeRadius + distance * 0.2);
+          const arcHeight = distance * distance * 0.05;
+          const controlPoint = start.vector.clone().lerp(end.vector, 0.5).normalize().multiplyScalar(globeRadius + arcHeight);
+          
           const curve = new THREE.QuadraticBezierCurve3(start.vector, controlPoint, end.vector);
           
           const tubeGeom = new THREE.TubeGeometry(curve, 32, 0.005, 8, false);
@@ -170,30 +171,77 @@ const Globe3D = () => {
           connections.push({
             curve,
             trailMaterial,
-            packet1: { sprite: packet1, position: Math.random(), speed: Math.random() * 0.01 + 0.005 },
-            packet2: { sprite: packet2, position: Math.random(), speed: Math.random() * 0.01 + 0.005 },
+            packet1: { sprite: packet1, position: Math.random(), speed: Math.random() * 0.02 + 0.005 },
+            packet2: { sprite: packet2, position: Math.random(), speed: Math.random() * 0.02 + 0.005 },
           });
       };
-
-      serverPoints.forEach(startServer => {
-        const others = serverPoints.filter(p => p.name !== startServer.name);
-        const nearest = others.sort((a, b) => startServer.vector.distanceTo(a.vector) - startServer.vector.distanceTo(b.vector))[0];
-        createConnection(startServer, nearest);
-        
-        const sameContinent = others.filter(p => p.continent === startServer.continent).sort(() => 0.5 - Math.random()).slice(0, 2);
-        sameContinent.forEach(peer => createConnection(startServer, peer));
-        
-        if (Math.random() < 0.2) {
-            const differentContinent = others.filter(p => p.continent !== startServer.continent);
-            if(differentContinent.length > 0) createConnection(startServer, differentContinent[Math.floor(Math.random() * differentContinent.length)]);
-        }
+      
+      // --- THE NEW CONNECTION ALGORITHM ---
+      
+      const serversByContinent = new Map<Continent, ServerPoint[]>();
+      serverPoints.forEach(p => {
+        if (!serversByContinent.has(p.continent)) serversByContinent.set(p.continent, []);
+        serversByContinent.get(p.continent)!.push(p);
       });
+
+      // 1. Identify Gateways
+      const gateways = new Map<Continent, ServerPoint>();
+      for (const [continent, points] of serversByContinent.entries()) {
+        let bestGateway: ServerPoint | null = null;
+        let minAvgDist = Infinity;
+        
+        for (const candidate of points) {
+          let totalDist = 0;
+          let otherCount = 0;
+          for (const other of serverPoints) {
+            if (other.continent !== continent) {
+              totalDist += candidate.vector.distanceTo(other.vector);
+              otherCount++;
+            }
+          }
+          const avgDist = totalDist / otherCount;
+          if (avgDist < minAvgDist) {
+            minAvgDist = avgDist;
+            bestGateway = candidate;
+          }
+        }
+        if (bestGateway) gateways.set(continent, bestGateway);
+      }
+      const gatewayList = Array.from(gateways.values());
+
+      // 2. Connect Gateways (Intercontinental Backbone)
+      for(let i=0; i < gatewayList.length; i++) {
+        for(let j=i+1; j < gatewayList.length; j++) {
+            createConnection(gatewayList[i], gatewayList[j]);
+        }
+      }
+
+      // 3. Connect regional servers to their gateway (Spoke-to-Hub)
+      for (const [continent, points] of serversByContinent.entries()) {
+          const gateway = gateways.get(continent);
+          if (gateway) {
+              points.forEach(point => {
+                  if (point !== gateway) {
+                      createConnection(point, gateway);
+                  }
+              });
+          }
+      }
+      
+      // 4. Create local peering (nearest neighbor)
+      serverPoints.forEach(startServer => {
+          const nearest = serverPoints
+            .filter(p => p.name !== startServer.name)
+            .sort((a,b) => startServer.vector.distanceTo(a.vector) - startServer.vector.distanceTo(b.vector))[0];
+          createConnection(startServer, nearest);
+      });
+
     });
 
     const animate = () => {
       requestAnimationFrame(animate);
       connections.forEach(conn => {
-        if (conn.trailMaterial.map) conn.trailMaterial.map.offset.x -= 0.0005;
+        if (conn.trailMaterial.map) conn.trailMaterial.map.offset.x -= 0.002;
         conn.packet1.position = (conn.packet1.position + conn.packet1.speed) % 1;
         conn.packet2.position = (conn.packet2.position + conn.packet2.speed) % 1;
         conn.curve.getPointAt(conn.packet1.position, conn.packet1.sprite.position);
