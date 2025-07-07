@@ -1,19 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-const cities = [
-    { name: 'New York', lat: 40.7128, lng: -74.0060, type: 'server' },
-    { name: 'London', lat: 51.5074, lng: -0.1278, type: 'server' },
-    { name: 'Tokyo', lat: 35.6762, lng: 139.6503, type: 'server' },
-    { name: 'Sydney', lat: -33.8688, lng: 151.2093, type: 'client' },
-    { name: 'Mumbai', lat: 19.0760, lng: 72.8777, type: 'client' },
-    { name: 'São Paulo', lat: -23.5505, lng: -46.6333, type: 'client' },
-    { name: 'Singapore', lat: 1.3521, lng: 103.8198, type: 'server' },
-    { name: 'Frankfurt', lat: 50.1109, lng: 8.6821, type: 'server' },
-    { name: 'Los Angeles', lat: 34.0522, lng: -118.2437, type: 'client' },
-    { name: 'Hong Kong', lat: 22.3193, lng: 114.1694, type: 'server' },
-] as const;
+// --- Helper Functions and Type Definitions ---
 
 const latLngToVector3 = (lat: number, lng: number, radius: number): THREE.Vector3 => {
   const phi = (90 - lat) * (Math.PI / 180);
@@ -24,14 +13,40 @@ const latLngToVector3 = (lat: number, lng: number, radius: number): THREE.Vector
   return new THREE.Vector3(x, y, z);
 };
 
+type Continent = 'North America' | 'South America' | 'Europe' | 'Africa' | 'Asia' | 'Oceania';
+
+const getContinent = (lng: number): Continent => {
+    if (lng > -125 && lng < -66) return 'North America';
+    if (lng > -81 && lng < -34) return 'South America';
+    if (lng > -10 && lng < 44) return 'Europe'; // Europe/Africa
+    if (lng > 100 && lng < 180) return 'Oceania';
+    return 'Asia'; // Asia/Africa
+};
+
+type Server = { name: string; lat: number; lng: number };
+type ServerPoint = Server & { vector: THREE.Vector3; continent: Continent };
+type Connection = {
+  curve: THREE.QuadraticBezierCurve3;
+  packet1: { sprite: THREE.Sprite; position: number; speed: number; };
+  packet2: { sprite: THREE.Sprite; position: number; speed: number; };
+  trailMaterial: THREE.MeshBasicMaterial;
+};
+
 const Globe3D = () => {
   const mountRef = useRef<HTMLDivElement>(null);
+
+  const [trailTexture, glowTexture] = useMemo(() => {
+    const loader = new THREE.TextureLoader();
+    const trail = loader.load('/trail.webp');
+    trail.wrapS = THREE.RepeatWrapping;
+    const glow = loader.load('/glow.webp');
+    return [trail, glow];
+  }, []);
 
   useEffect(() => {
     if (!mountRef.current) return;
     const currentMount = mountRef.current;
 
-    // --- Basic Scene Setup ---
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, currentMount.clientWidth / currentMount.clientHeight, 0.1, 1000);
     camera.position.z = 15;
@@ -41,194 +56,181 @@ const Globe3D = () => {
     renderer.setPixelRatio(window.devicePixelRatio);
     currentMount.appendChild(renderer.domElement);
 
-    // --- Controls ---
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.enableZoom = false;
     controls.enablePan = false;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.5;
-    controls.minPolarAngle = Math.PI / 3.5;
-    controls.maxPolarAngle = Math.PI - Math.PI / 3;
+    controls.autoRotateSpeed = 0.3;
+    controls.minPolarAngle = Math.PI / 4;
+    controls.maxPolarAngle = Math.PI - Math.PI / 4;
 
-    // --- Globe and Globe Group ---
     const globeRadius = 5;
     const globeGroup = new THREE.Group();
-    const AXIAL_TILT = 23.5 * (Math.PI / 180);
-    globeGroup.rotation.z = AXIAL_TILT;
+    globeGroup.rotation.z = 23.5 * (Math.PI / 180);
     scene.add(globeGroup);
 
-    // --- Layer 1: Green Base Sphere ---
-    const baseSphereMaterial = new THREE.MeshBasicMaterial({
-      color: 0x00ff00,
-      transparent: true,
-      opacity: 0.05
-    });
-    const baseSphere = new THREE.Mesh(new THREE.SphereGeometry(globeRadius, 64, 64), baseSphereMaterial);
-    globeGroup.add(baseSphere);
-
-    // --- Layer 2: Country Coastline Outlines ---
-    fetch('/countries.json') // Using the provided file name
-      .then(res => res.json())
-      .then(data => {
-        const lineMaterial = new THREE.LineBasicMaterial({
-          color: 0x00ff00,
-          transparent: true,
-          opacity: 0.4,
-        });
-        const allPoints: THREE.Vector3[] = [];
-        
-        // ** THE FIX: Correctly parse LineString geometry **
-        data.features.forEach((feature: any) => {
-          // Check for valid geometry of type LineString
-          if (feature.geometry && feature.geometry.type === 'LineString') {
-            const coordinates = feature.geometry.coordinates;
-            for (let i = 0; i < coordinates.length - 1; i++) {
-              const startCoords = coordinates[i];
-              const endCoords = coordinates[i + 1];
-              
-              // Draw lines on a slightly larger radius to ensure they are visible over the base sphere
-              const lineRadius = globeRadius + 0.01;
-              const start = latLngToVector3(startCoords[1], startCoords[0], lineRadius);
-              const end = latLngToVector3(endCoords[1], endCoords[0], lineRadius);
-              
-              allPoints.push(start, end);
-            }
-          }
-        });
-
-        const lineGeometry = new THREE.BufferGeometry().setFromPoints(allPoints);
-        const outlines = new THREE.LineSegments(lineGeometry, lineMaterial);
-        globeGroup.add(outlines);
-      });
-      
-    // --- Layer 3: Textured Earth Surface ---
-    const textureLoader = new THREE.TextureLoader();
-    const earthTexture = textureLoader.load('/earth-dark.jpeg');
+    // Globe Layers
+    globeGroup.add(new THREE.Mesh(
+      new THREE.SphereGeometry(globeRadius, 64, 64),
+      new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.0 })
+    ));
+    
+    const earthTexture = new THREE.TextureLoader().load('/earth-dark.jpeg');
     earthTexture.colorSpace = THREE.SRGBColorSpace;
     earthTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    globeGroup.add(new THREE.Mesh(
+      new THREE.SphereGeometry(globeRadius, 64, 64),
+      new THREE.MeshBasicMaterial({ map: earthTexture, transparent: true, opacity: 0.0 })
+    ));
     
-    const earthMaterial = new THREE.MeshBasicMaterial({
-      map: earthTexture,
-      transparent: true,
-      opacity: 0.9, // Reduced opacity to see outlines underneath
-    });
-    const earthMesh = new THREE.Mesh(new THREE.SphereGeometry(globeRadius, 64, 64), earthMaterial);
-    globeGroup.add(earthMesh);
-
-    // --- City Points and Connections (rendered on the surface) ---
-    const cityPoints: { mesh: THREE.Mesh; type: 'server' | 'client' }[] = [];
-    cities.forEach(city => {
-      const position = latLngToVector3(city.lat, city.lng, globeRadius);
-      const pointSize = city.type === 'server' ? 0.07 : 0.04;
-      const color = city.type === 'server' ? 0x00ff00 : 0x00c8ff;
-      const pointMesh = new THREE.Mesh(
-        new THREE.SphereGeometry(pointSize, 16, 16),
-        new THREE.MeshBasicMaterial({ color })
-      );
-      pointMesh.position.copy(position);
-      globeGroup.add(pointMesh);
-      cityPoints.push({ mesh: pointMesh, type: city.type });
-    });
-
-    // ... (The rest of your code for connections, particles, animation, etc. remains the same)
-    const connections: { curve: THREE.QuadraticBezierCurve3; particle: THREE.Mesh; speed: number; particlePosition: number; }[] = [];
-    const baseLinePoints: THREE.Vector3[] = [];
-    const glowLinePoints: THREE.Vector3[] = [];
-    
-    const servers = cityPoints.filter(p => p.type === 'server');
-    const clients = cityPoints.filter(p => p.type === 'client');
-
-    clients.forEach(client => {
-      const randomServer = servers[Math.floor(Math.random() * servers.length)];
-      if (!randomServer) return;
-
-      const startVec = client.mesh.position;
-      const endVec = randomServer.mesh.position;
-      const distance = startVec.distanceTo(endVec);
-      const controlPoint = new THREE.Vector3().addVectors(startVec, endVec).multiplyScalar(0.5).normalize().multiplyScalar(globeRadius + distance * 0.3);
-      const curve = new THREE.QuadraticBezierCurve3(startVec, controlPoint, endVec);
-      const curvePoints = curve.getPoints(50);
-      
-      for (let i = 0; i < curvePoints.length - 1; i++) {
-        baseLinePoints.push(curvePoints[i], curvePoints[i+1]);
-        glowLinePoints.push(curvePoints[i], curvePoints[i+1]);
+    // --- NEW: Faint Lat/Long Grid Lines ---
+    const gridPoints: THREE.Vector3[] = [];
+    const gridRadius = globeRadius + 0.005; // Slightly above the surface
+    // Latitude lines
+    for (let lat = -90; lat <= 90; lat += 15) {
+      for (let lng = -180; lng <= 180; lng += 5) {
+        gridPoints.push(latLngToVector3(lat, lng, gridRadius));
+        gridPoints.push(latLngToVector3(lat, lng + 5, gridRadius));
       }
+    }
+    // Longitude lines
+    for (let lng = -180; lng <= 180; lng += 15) {
+      for (let lat = -90; lat <= 90; lat += 5) {
+        gridPoints.push(latLngToVector3(lat, lng, gridRadius));
+        gridPoints.push(latLngToVector3(lat + 5, lng, gridRadius));
+      }
+    }
+    const gridGeom = new THREE.BufferGeometry().setFromPoints(gridPoints);
+    const gridMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.1 });
+    const gridLines = new THREE.LineSegments(gridGeom, gridMaterial);
+    globeGroup.add(gridLines);
 
-      const particle = new THREE.Mesh(
-          new THREE.SphereGeometry(0.04, 8, 8), 
-          new THREE.MeshBasicMaterial({ color: 0xffffff })
-      );
-      globeGroup.add(particle);
-      connections.push({ curve, particle, particlePosition: Math.random(), speed: Math.random() * 0.003 + 0.001 });
-    });
 
-    const baseLineGeom = new THREE.BufferGeometry().setFromPoints(baseLinePoints);
-    const glowLineGeom = new THREE.BufferGeometry().setFromPoints(glowLinePoints);
-    const baseLine = new THREE.LineSegments(baseLineGeom, new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.3, linewidth: 2 }));
-    const glowLine = new THREE.LineSegments(glowLineGeom, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending }));
-    globeGroup.add(baseLine, glowLine);
+    const connections: Connection[] = [];
+    
+    Promise.all([
+      fetch('/countries.json').then(res => res.json()),
+      fetch('/servers.json').then(res => res.json())
+    ]).then(([countriesData, serverJson]) => {
+      const servers: Server[] = serverJson.servers;
 
-    const clock = new THREE.Clock();
-    let animationFrameId: number;
-    const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      // **ENHANCEMENT:** Bolder country lines
+      const outlineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.25 });
+      const outlinePoints: THREE.Vector3[] = [];
+      countriesData.features.forEach((feature: any) => {
+        if (feature.geometry?.type === 'LineString') {
+          for (let i = 0; i < feature.geometry.coordinates.length - 1; i++) {
+            const start = latLngToVector3(feature.geometry.coordinates[i][1], feature.geometry.coordinates[i][0], globeRadius + 0.01);
+            const end = latLngToVector3(feature.geometry.coordinates[i+1][1], feature.geometry.coordinates[i+1][0], globeRadius + 0.01);
+            if (start.distanceTo(end) < globeRadius * 1.5) {
+              outlinePoints.push(start, end);
+            }
+          }
+        }
+      });
+      globeGroup.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(outlinePoints), outlineMaterial));
 
-      cityPoints.forEach(point => {
-        const pulse = Math.sin(elapsedTime * 3 + point.mesh.position.x) * 0.15 + 0.9;
-        point.mesh.scale.set(pulse, pulse, pulse);
+      const serverPoints: ServerPoint[] = servers.map(server => ({
+        ...server,
+        vector: latLngToVector3(server.lat, server.lng, globeRadius),
+        continent: getContinent(server.lng)
+      }));
+      
+      const spriteMaterial = new THREE.SpriteMaterial({ map: glowTexture, color: 0x00ff00, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+      serverPoints.forEach(server => {
+        const sprite = new THREE.Sprite(spriteMaterial);
+        sprite.scale.set(0.15, 0.15, 1);
+        sprite.position.copy(server.vector);
+        globeGroup.add(sprite);
       });
       
-      connections.forEach(conn => {
-        conn.particlePosition = (conn.particlePosition + conn.speed) % 1;
-        conn.curve.getPointAt(conn.particlePosition, conn.particle.position);
-      });
+      const establishedConnections = new Set<string>();
+      const createConnection = (start: ServerPoint, end: ServerPoint) => {
+          const key = `${Math.min(serverPoints.indexOf(start), serverPoints.indexOf(end))}-${Math.max(serverPoints.indexOf(start), serverPoints.indexOf(end))}`;
+          if (establishedConnections.has(key)) return;
+          establishedConnections.add(key);
 
+          const distance = start.vector.distanceTo(end.vector);
+          const controlPoint = start.vector.clone().lerp(end.vector, 0.5).normalize().multiplyScalar(globeRadius + distance * 0.2);
+          const curve = new THREE.QuadraticBezierCurve3(start.vector, controlPoint, end.vector);
+          
+          const tubeGeom = new THREE.TubeGeometry(curve, 32, 0.005, 8, false);
+          const trailMaterial = new THREE.MeshBasicMaterial({ map: trailTexture, transparent: true, blending: THREE.AdditiveBlending, color: 0xffffff });
+          globeGroup.add(new THREE.Mesh(tubeGeom, trailMaterial));
+          
+          const packetMaterial = new THREE.SpriteMaterial({ map: glowTexture, color: 0xffffff, transparent: true, blending: THREE.AdditiveBlending });
+          const packet1 = new THREE.Sprite(packetMaterial.clone());
+          packet1.scale.set(0.08, 0.08, 1);
+          const packet2 = new THREE.Sprite(packetMaterial.clone());
+          packet2.scale.set(0.08, 0.08, 1);
+          globeGroup.add(packet1, packet2);
+
+          connections.push({
+            curve,
+            trailMaterial,
+            packet1: { sprite: packet1, position: Math.random(), speed: Math.random() * 0.01 + 0.005 },
+            packet2: { sprite: packet2, position: Math.random(), speed: Math.random() * 0.01 + 0.005 },
+          });
+      };
+
+      serverPoints.forEach(startServer => {
+        const others = serverPoints.filter(p => p.name !== startServer.name);
+        const nearest = others.sort((a, b) => startServer.vector.distanceTo(a.vector) - startServer.vector.distanceTo(b.vector))[0];
+        createConnection(startServer, nearest);
+        
+        const sameContinent = others.filter(p => p.continent === startServer.continent).sort(() => 0.5 - Math.random()).slice(0, 2);
+        sameContinent.forEach(peer => createConnection(startServer, peer));
+        
+        if (Math.random() < 0.2) {
+            const differentContinent = others.filter(p => p.continent !== startServer.continent);
+            if(differentContinent.length > 0) createConnection(startServer, differentContinent[Math.floor(Math.random() * differentContinent.length)]);
+        }
+      });
+    });
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      connections.forEach(conn => {
+        if (conn.trailMaterial.map) conn.trailMaterial.map.offset.x -= 0.0005;
+        conn.packet1.position = (conn.packet1.position + conn.packet1.speed) % 1;
+        conn.packet2.position = (conn.packet2.position + conn.packet2.speed) % 1;
+        conn.curve.getPointAt(conn.packet1.position, conn.packet1.sprite.position);
+        conn.curve.getPointAt(1 - conn.packet2.position, conn.packet2.sprite.position);
+      });
       controls.update();
       renderer.render(scene, camera);
     };
     animate();
 
     const handleResize = () => {
-      if (!currentMount) return;
-      const { clientWidth, clientHeight } = currentMount;
-      renderer.setSize(clientWidth, clientHeight);
-      camera.aspect = clientWidth / clientHeight;
-      camera.updateProjectionMatrix();
+        if (currentMount) {
+            camera.aspect = currentMount.clientWidth / currentMount.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
+        }
     };
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animationFrameId);
       controls.dispose();
       currentMount.removeChild(renderer.domElement);
-      
-      scene.traverse(object => {
-        if (object instanceof THREE.Mesh || object instanceof THREE.LineSegments) {
-          if (object.geometry) object.geometry.dispose();
-          if (object.material) {
-             if (Array.isArray(object.material)) {
-                object.material.forEach(material => material.dispose());
-             } else {
-                object.material.dispose();
-             }
-          }
+      scene.traverse(obj => {
+        if (obj instanceof THREE.Mesh || obj instanceof THREE.Line || obj instanceof THREE.LineSegments || obj instanceof THREE.Sprite) {
+          obj.geometry?.dispose();
+          if (Array.isArray(obj.material)) obj.material.forEach(mat => mat.dispose());
+          else obj.material?.dispose();
         }
       });
       earthTexture.dispose();
+      trailTexture.dispose();
+      glowTexture.dispose();
     };
-  }, []);
+  }, [trailTexture, glowTexture]);
 
-  return (
-    <div
-      ref={mountRef}
-      style={{ width: '100%', height: '100%' }}
-      className="cursor-grab active:cursor-grabbing"
-    />
-  );
+  return <div ref={mountRef} style={{ width: '100%', height: '100%' }} className="cursor-grab active:cursor-grabbing" />;
 };
 
 export default Globe3D;
