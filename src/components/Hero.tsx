@@ -49,7 +49,7 @@ const Hero = () => {
         - `top-24` leaves space for a potential navbar.
         - `left-4` removes the large implicit margin.
       */}
-      <div className="absolute top-24 left-4 p-2 border border-green-400/30 rounded-lg bg-black/50 backdrop-blur-sm z-10 w-100% max-w-sm lg:max-w-md hidden lg:block">
+      <div className="absolute top-24 left-20 p-2 border border-green-400/30 rounded-lg bg-black/50 backdrop-blur-sm z-10 w-100% max-w-sm lg:max-w-md hidden lg:block">
           <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap">
 {`import { useState } from "react";
 
@@ -76,14 +76,14 @@ export function hireDeveloper() {
         - `pointer-events-none` on the container allows clicks to pass through.
         - The Globe3D component itself now has `pointer-events-auto` via className.
       */}
-      <div className="absolute inset-y-0 right-0 w-[40vw] flex items-center justify-center pointer-events-none z-10">
+      <div className="absolute inset-y-0 -right-20 top-28 w-[40vw] flex items-center justify-center pointer-events-none z-10">
         <div className="w-full aspect-square relative mr-16">
           <div className="absolute inset-0 bg-green-500/10 rounded-full blur-3xl"></div>
           {/* Globe component is inside a div to manage pointer events */}
           <div className="absolute inset-0 pointer-events-auto">
             <Globe3D />
           </div>
-          <div className="absolute top-4 right-4 text-green-400 font-mono text-xs">
+          <div className="absolute top-8 right-12 text-green-400 font-mono text-xs">
             // Global Network
           </div>
         </div>

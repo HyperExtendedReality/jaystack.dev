@@ -72,6 +72,14 @@ const Globe3D = () => {
     scene.add(globeGroup);
 
     // --- Globe Layers ---
+
+    // MODIFICATION: Add an invisible sphere that occludes (hides) objects on the far side.
+    // It's invisible because colorWrite is false, but it writes to the depth buffer.
+    const occluder = new THREE.Mesh(
+      new THREE.SphereGeometry(globeRadius, 64, 64),
+      new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: true })
+    );
+    globeGroup.add(occluder);
     
     globeGroup.add(new THREE.Mesh(
       new THREE.SphereGeometry(globeRadius, 64, 64),
@@ -104,7 +112,8 @@ const Globe3D = () => {
       }
     }
     const gridGeom = new THREE.BufferGeometry().setFromPoints(gridPoints);
-    const gridMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.05 });
+    // MODIFICATION: Set depthTest to false to make the grid visible through the globe.
+    const gridMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.05, depthTest: false });
     const gridLines = new THREE.LineSegments(gridGeom, gridMaterial);
     globeGroup.add(gridLines);
 
@@ -116,7 +125,8 @@ const Globe3D = () => {
     ]).then(([countriesData, serverJson]) => {
       const servers: Server[] = serverJson.servers;
 
-      const outlineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.4 });
+      // This material will now be properly occluded by the invisible sphere.
+      const outlineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.75 });
       const outlinePoints: THREE.Vector3[] = [];
       countriesData.features.forEach((feature: any) => {
         if (feature.geometry?.type === 'LineString') {
@@ -158,6 +168,7 @@ const Globe3D = () => {
           const curve = new THREE.QuadraticBezierCurve3(start.vector, controlPoint, end.vector);
           
           const tubeGeom = new THREE.TubeGeometry(curve, 32, 0.005, 8, false);
+          // This material will now be properly occluded by the invisible sphere.
           const trailMaterial = new THREE.MeshBasicMaterial({ map: trailTexture, transparent: true, blending: THREE.AdditiveBlending, color: 0xffffff });
           globeGroup.add(new THREE.Mesh(tubeGeom, trailMaterial));
           
