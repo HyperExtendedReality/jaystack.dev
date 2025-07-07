@@ -119,7 +119,7 @@ const Contact = () => {
                 <div className="flex items-center gap-3">
                   <span className="text-blue-400">→</span>
                   <span className="text-blue-300">email:</span>
-                  <span className="text-blue-400">dev@yourname.com</span>
+                  <span className="text-blue-400">hyperextendedreality@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-blue-400">→</span>
@@ -129,12 +129,12 @@ const Contact = () => {
                 <div className="flex items-center gap-3">
                   <span className="text-blue-400">→</span>
                   <span className="text-blue-300">github:</span>
-                  <span className="text-blue-400">@yourname</span>
+                  <span className="text-blue-400">@HyperExtendedReality</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-blue-400">→</span>
                   <span className="text-blue-300">location:</span>
-                  <span className="text-blue-400">Your City, Country</span>
+                  <span className="text-blue-400">Orlando, FL, USA</span>
                 </div>
               </div>
             </div>
