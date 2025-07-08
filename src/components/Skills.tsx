@@ -1,37 +1,37 @@
 
 const Skills = () => {
-  const skillCategories = [
+    const skillCategories = [
     {
-      title: "Frontend",
+      title: "Game & Specialized Dev",
       color: "green",
       skills: [
-        { name: "React", level: 95 },
-        { name: "TypeScript", level: 90 },
-        { name: "Next.js", level: 85 },
-        { name: "Tailwind CSS", level: 92 },
-        { name: "Vue.js", level: 78 }
+        { name: "Unreal Engine (Blueprints)", level: 85 },
+        { name: "Unity (C#)", level: 80 },
+        { name: "FiveM (Lua)", level: 95 },
+        { name: "XR (VR/AR)", level: 88 },
+        { name: "FiveM (C#)", level: 75 },
       ]
     },
     {
-      title: "Backend",
+      title: "Frontend",
       color: "blue",
       skills: [
-        { name: "Node.js", level: 88 },
-        { name: "Express", level: 85 },
-        { name: "Python", level: 82 },
-        { name: "GraphQL", level: 75 },
-        { name: "REST APIs", level: 93 }
+        { name: "React / Next.js", level: 90 },
+        { name: "Svelte / Astro", level: 85 },
+        { name: "TypeScript", level: 88 },
+        { name: "Vue.js", level: 80 },
+        { name: "jQuery / CSS / HTML", level: 92 },
       ]
     },
     {
-      title: "Database & Cloud",
+      title: "Backend & Database",
       color: "purple",
       skills: [
-        { name: "MongoDB", level: 87 },
-        { name: "PostgreSQL", level: 83 },
-        { name: "AWS", level: 80 },
-        { name: "Docker", level: 78 },
-        { name: "Redis", level: 72 }
+        { name: "Node.js / REST APIs", level: 85 },
+        { name: "Python", level: 70 },
+        { name: "PostgreSQL / MySQL", level: 82 },
+        { name: "MariaDB", level: 88 },
+        { name: "Drizzle ORM", level: 80 },
       ]
     }
   ];
@@ -50,11 +50,11 @@ const Skills = () => {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4 text-green-400 font-mono">
-            {"/* Technical Skills */"}
+            {"/* Technical Arsenal */"}
           </h2>
           <div className="w-24 h-1 bg-green-400 mx-auto mb-4"></div>
           <p className="text-green-300/80 font-mono">
-            const skills = require('./my-expertise.json');
+            const expertise = require('./skills.json');
           </p>
         </div>
         

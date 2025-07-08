@@ -8,8 +8,9 @@ const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
 
+  // No changes needed in the state or effects
   const codeSnippets = [
-    "Full-Stack Developer", "React Specialist", "Node.js Expert", "Database Architect",
+    "Game Developer", "XR Specialist", "FiveM & Lua Expert", "Full-Stack Developer",
   ];
 
   useEffect(() => {
@@ -39,17 +40,20 @@ const Hero = () => {
   }, []);
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative px-4 overflow-hidden">
-      {/* z-0: The absolute bottom layer */}
+    // MODIFICATION: Changed to flex-col for mobile-first layout.
+    // lg:relative is crucial for absolute positioning to work relative to the section on desktop.
+    <section id="home" className="min-h-screen flex flex-col items-center justify-center relative px-4 overflow-hidden py-16 lg:py-0">
       <MatrixBackground />
 
       {/* 
         DEVELOPER CODE SNIPPET (z-10)
-        - Positioned absolutely to sit behind main content but above the matrix.
-        - `top-24` leaves space for a potential navbar.
-        - `left-4` removes the large implicit margin.
+        MODIFICATION: Becomes a normal block on mobile and absolute only on desktop.
+        - `order-1` places it first on mobile.
+        - Responsive classes like `lg:absolute` apply the desktop layout.
+        - Removed `hidden` to make it visible on mobile.
       */}
-      <div className="absolute top-24 left-20 p-2 border border-green-400/30 rounded-lg bg-black/50 backdrop-blur-sm z-10 w-100% max-w-sm lg:max-w-md hidden lg:block">
+      <div className="w-full max-w-sm p-2 border border-green-400/30 rounded-lg bg-black/50 backdrop-blur-sm z-10 
+                       lg:absolute lg:top-24 lg:left-20 lg:max-w-md order-1 lg:order-none">
           <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap">
 {`import { useState } from "react";
 
@@ -72,31 +76,33 @@ export function hireDeveloper() {
 
       {/* 
         GLOBE SECTION (z-10)
-        - Increased size to 40vw for more presence.
-        - `pointer-events-none` on the container allows clicks to pass through.
-        - The Globe3D component itself now has `pointer-events-auto` via className.
+        MODIFICATION: Now responsive. It's a normal block on mobile and absolute on desktop.
+        - `order-3` places it last on mobile.
+        - Sizing and positioning are now responsive (`w-[80vw]` on mobile, `lg:w-[40vw]` on desktop).
       */}
-      <div className="absolute inset-y-0 -right-20 top-28 w-[40vw] flex items-center justify-center pointer-events-none z-10">
-        <div className="w-full aspect-square relative mr-16">
+      <div className="relative w-[80vw] sm:w-[60vw] max-w-xs mt-8 
+                       lg:absolute lg:inset-y-0 lg:-right-20 lg:w-[40vw] lg:max-w-none 
+                       flex items-center justify-center pointer-events-none z-10 
+                       order-3 lg:order-none">
+        <div className="w-full aspect-square relative lg:mr-16">
           <div className="absolute inset-0 bg-green-500/10 rounded-full blur-3xl"></div>
-          {/* Globe component is inside a div to manage pointer events */}
           <div className="absolute inset-0 pointer-events-auto">
             <Globe3D />
           </div>
-          <div className="absolute top-8 right-12 text-green-400 font-mono text-xs">
+          <div className="absolute top-8 right-12 text-green-400 font-mono text-xs hidden lg:block">
             // Global Network
           </div>
         </div>
       </div>
 
-      {/* MAIN CONTENT (z-20) - Sits on top of everything else */}
-      <div className="max-w-7xl mx-auto w-full flex justify-center items-center relative z-20">
-        {/*
-          This container now only holds the central HelloWorld content.
-          It's centered using flexbox on the main wrapper.
-          The left and right columns are now absolutely positioned.
-        */}
-        <div className="w-full lg:w-1/2 text-center flex flex-col items-center">
+      {/* 
+        MAIN CONTENT (z-20)
+        MODIFICATION: Container width is now constrained on desktop to prevent overlap.
+        - `lg:max-w-3xl` stops the container from covering the globe.
+        - `order-2` places it in the middle on mobile.
+      */}
+      <div className="w-full lg:max-w-3xl mx-auto flex justify-center items-center relative z-20 order-2 lg:order-none mt-8 lg:mt-0">
+        <div className="w-full text-center flex flex-col items-center">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 text-green-400 text-center">
             {"<HelloWorld />"}
           </h1>
@@ -129,7 +135,7 @@ export function hireDeveloper() {
         </div>
       </div>
 
-      {/* Scroll Down Indicator */}
+      {/* Scroll Down Indicator - No changes needed */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-20">
         <div className="w-6 h-10 border-2 border-green-400/50 rounded-full flex justify-center">
           <div className="w-1 h-3 bg-green-400 rounded-full mt-2 animate-pulse"></div>

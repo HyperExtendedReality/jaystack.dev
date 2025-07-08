@@ -15,16 +15,18 @@ const About = () => {
             <div className="border border-green-400/30 rounded-lg p-6 bg-black/50 backdrop-blur-sm">
               <pre className="text-green-400 font-mono text-sm overflow-x-auto">
 {`const aboutMe = {
-  background: "Computer Science Graduate",
-  experience: "5+ years in web development",
-  passion: "Creating efficient, scalable solutions",
-  currentFocus: [
-    "Modern React applications",
-    "RESTful API design",
-    "Cloud architecture",
-    "Performance optimization"
+  background: [
+    "Self-Taught Developer",
+    "Harvard CS50 Certified",
+    "Meta Front-end Certified"
   ],
-  hobbies: ["Open source", "Tech blogging", "Gaming"],
+  experience: "4+ years in game & web dev",
+  passion: "Building immersive digital experiences",
+  currentFocus: [
+    "Unreal Engine & XR",
+    "FiveM Server Development (Lua)",
+    "Headless Web Architecture"
+  ],
   coffee: "☕".repeat(Math.floor(Math.random() * 5) + 1)
 };`}
               </pre>
@@ -33,11 +35,9 @@ const About = () => {
           
           <div className="space-y-6">
             <div className="border border-green-400/30 rounded-lg p-6 bg-black/50 backdrop-blur-sm">
-              <h3 className="text-xl font-mono text-green-400 mb-4">$ cat philosophy.txt</h3>
+              <h3 className="text-xl font-mono text-green-400 mb-4">$ cat ./dev_philosophy.md</h3>
               <p className="text-green-300/80 leading-relaxed font-mono text-sm">
-                I believe in writing clean, maintainable code that solves real-world problems. 
-                My approach combines technical excellence with user-centered design, ensuring 
-                that every application I build is both powerful and intuitive.
+                My journey is rooted in a passion for creating interactive worlds. I apply game design principles to web development, focusing on performance, user engagement, and clean, scalable code. Whether it's a game mechanic or a UI component, I build with purpose and precision.
               </p>
               <div className="mt-4 p-3 bg-green-400/10 rounded border-l-4 border-green-400">
                 <p className="text-green-400 font-mono text-xs">
@@ -47,12 +47,12 @@ const About = () => {
             </div>
             
             <div className="border border-blue-400/30 rounded-lg p-6 bg-black/50 backdrop-blur-sm">
-              <h3 className="text-xl font-mono text-blue-400 mb-4">$ ls achievements/</h3>
+              <h3 className="text-xl font-mono text-blue-400 mb-4">$ ls ./achievements/</h3>
               <ul className="space-y-2 text-blue-300/80 font-mono text-sm">
-                <li>→ 50+ projects deployed to production</li>
-                <li>→ Led development teams of 5+ engineers</li>
-                <li>→ Reduced load times by 60% through optimization</li>
-                <li>→ Active contributor to open-source projects</li>
+                <li>→ Freelance developer for multiple FiveM communities</li>
+                <li>→ Shipped numerous self-directed game projects</li>
+                <li>→ Developed full-stack headless e-commerce sites</li>
+                <li>→ Completed Harvard's CS50 & Meta's FE Cert</li>
               </ul>
             </div>
           </div>

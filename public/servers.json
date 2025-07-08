@@ -41,6 +41,16 @@
     { "name": "Hong Kong", "lat": 22.32, "lng": 114.17 },
     { "name": "Sydney, Australia", "lat": -33.87, "lng": 151.21 },
     { "name": "Melbourne, Australia", "lat": -37.81, "lng": 144.96 },
-    { "name": "Auckland, New Zealand", "lat": -36.85, "lng": 174.76 }
+    { "name": "Auckland, New Zealand", "lat": -36.85, "lng": 174.76 },
+    { "name": "Honolulu, Hawaii, USA", "lat": 21.31, "lng": -157.86 },
+    { "name": "Seattle, USA", "lat": 47.61, "lng": -122.33 },
+    { "name": "Miami, USA", "lat": 25.76, "lng": -80.19 },
+    { "name": "New York, USA", "lat": 40.71, "lng": -74.01 },
+    { "name": "Querétaro, Mexico", "lat": 20.59, "lng": -100.39 },
+    { "name": "Nairobi, Kenya", "lat": -1.29, "lng": 36.82 },
+    { "name": "Lagos, Nigeria", "lat": 6.52, "lng": 3.38 },
+    { "name": "Delhi, India", "lat": 28.70, "lng": 77.10 },
+    { "name": "Beijing, China", "lat": 39.90, "lng": 116.41 },
+    { "name": "Shanghai, China", "lat": 31.23, "lng": 121.47 }
   ]
 }

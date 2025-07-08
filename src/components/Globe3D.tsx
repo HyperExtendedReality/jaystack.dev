@@ -73,7 +73,7 @@ const Globe3D = () => {
 
     // --- Globe Layers ---
 
-    // MODIFICATION: Add an invisible sphere that occludes (hides) objects on the far side.
+    // Add an invisible sphere that occludes (hides) objects on the far side.
     // It's invisible because colorWrite is false, but it writes to the depth buffer.
     const occluder = new THREE.Mesh(
       new THREE.SphereGeometry(globeRadius, 64, 64),
@@ -112,7 +112,6 @@ const Globe3D = () => {
       }
     }
     const gridGeom = new THREE.BufferGeometry().setFromPoints(gridPoints);
-    // MODIFICATION: Set depthTest to false to make the grid visible through the globe.
     const gridMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.05, depthTest: false });
     const gridLines = new THREE.LineSegments(gridGeom, gridMaterial);
     globeGroup.add(gridLines);
@@ -125,7 +124,6 @@ const Globe3D = () => {
     ]).then(([countriesData, serverJson]) => {
       const servers: Server[] = serverJson.servers;
 
-      // This material will now be properly occluded by the invisible sphere.
       const outlineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.75 });
       const outlinePoints: THREE.Vector3[] = [];
       countriesData.features.forEach((feature: any) => {
@@ -162,13 +160,14 @@ const Globe3D = () => {
           establishedConnections.add(key);
 
           const distance = start.vector.distanceTo(end.vector);
-          const arcHeight = distance * distance * 0.05;
+          // MODIFICATION: Increased the arc height factor to prevent long connections from
+          // visually clipping through the globe. This makes the arcs more pronounced.
+          const arcHeight = distance * distance * 0.0625;
           const controlPoint = start.vector.clone().lerp(end.vector, 0.5).normalize().multiplyScalar(globeRadius + arcHeight);
           
           const curve = new THREE.QuadraticBezierCurve3(start.vector, controlPoint, end.vector);
           
           const tubeGeom = new THREE.TubeGeometry(curve, 32, 0.005, 8, false);
-          // This material will now be properly occluded by the invisible sphere.
           const trailMaterial = new THREE.MeshBasicMaterial({ map: trailTexture, transparent: true, blending: THREE.AdditiveBlending, color: 0xffffff });
           globeGroup.add(new THREE.Mesh(tubeGeom, trailMaterial));
           
@@ -239,12 +238,19 @@ const Globe3D = () => {
           }
       }
       
-      // 4. Create local peering (nearest neighbor)
+      // MODIFICATION: Connect to the 2 nearest neighbors for denser, more realistic peering.
+      // This increases the chance of connections like Hawaii-Japan.
+      const PEERS_TO_CONNECT = 2;
       serverPoints.forEach(startServer => {
-          const nearest = serverPoints
+          const nearestPeers = serverPoints
             .filter(p => p.name !== startServer.name)
-            .sort((a,b) => startServer.vector.distanceTo(a.vector) - startServer.vector.distanceTo(b.vector))[0];
-          createConnection(startServer, nearest);
+            .sort((a,b) => startServer.vector.distanceTo(a.vector) - startServer.vector.distanceTo(b.vector));
+          
+          for (let i = 0; i < PEERS_TO_CONNECT; i++) {
+              if (nearestPeers[i]) {
+                  createConnection(startServer, nearestPeers[i]);
+              }
+          }
       });
 
     });
@@ -252,7 +258,7 @@ const Globe3D = () => {
     const animate = () => {
       requestAnimationFrame(animate);
       connections.forEach(conn => {
-        if (conn.trailMaterial.map) conn.trailMaterial.map.offset.x -= 0.002;
+        if (conn.trailMaterial.map) conn.trailMaterial.map.offset.x -= 0.0005;
         conn.packet1.position = (conn.packet1.position + conn.packet1.speed) % 1;
         conn.packet2.position = (conn.packet2.position + conn.packet2.speed) % 1;
         conn.curve.getPointAt(conn.packet1.position, conn.packet1.sprite.position);
@@ -289,7 +295,7 @@ const Globe3D = () => {
     };
   }, [trailTexture, glowTexture]);
 
-  return <div ref={mountRef} style={{ width: '100%', height: '100%' }} className="cursor-grab active:cursor-grabbing" />;
+  return <div ref={mountRef} style={{ width: '100%', height: '100%', touchAction: 'none' }} className="cursor-grab active:cursor-grabbing" />;
 };
 
 export default Globe3D;

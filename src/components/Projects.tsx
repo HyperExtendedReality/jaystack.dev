@@ -5,36 +5,36 @@ import { Code, Database, Terminal } from "lucide-react";
 const Projects = () => {
   const [activeProject, setActiveProject] = useState(0);
   
-  const projects = [
+    const projects = [
     {
       id: 1,
-      title: "E-Commerce Platform",
+      title: "Munchi - Headless E-Commerce",
       type: "Full-Stack Application",
-      description: "A complete e-commerce solution with real-time inventory management, payment processing, and admin dashboard.",
-      tech: ["React", "Node.js", "MongoDB", "Stripe", "Redis"],
-      features: ["User authentication", "Payment integration", "Admin panel", "Real-time updates"],
-      status: "Production",
-      lines: "15,000+"
+      description: "An exotic snacks e-commerce website built with a headless WordPress backend, delivering a fast, modern frontend experience.",
+      tech: ["Next.js", "React", "WordPress", "GraphQL", "Tailwind CSS"],
+      features: ["Headless architecture", "Stripe payment integration", "Dynamic inventory", "Custom API routes"],
+      status: "Portfolio",
+      lines: "9,000+"
     },
     {
       id: 2,
-      title: "Task Management API",
-      type: "Backend Service",
-      description: "RESTful API with GraphQL support for team collaboration and project management with real-time notifications.",
-      tech: ["Node.js", "GraphQL", "PostgreSQL", "Docker", "AWS"],
-      features: ["GraphQL API", "Real-time sync", "Team collaboration", "Cloud deployment"],
-      status: "Active",
-      lines: "8,500+"
+      title: "FiveM Custom Gameplay Systems",
+      type: "Game & Backend Development",
+      description: "Developed custom server-side gameplay mechanics, inventories, and UI systems for GTA V FiveM servers as a freelance developer.",
+      tech: ["Lua", "FiveM", "NUI (JS/HTML/CSS)", "MariaDB", "REST APIs"],
+      features: ["Server-side logic", "Custom UI with NUI", "Database integration", "Optimized for performance"],
+      status: "Live on Client Servers",
+      lines: "20,000+ (aggregate)"
     },
     {
       id: 3,
-      title: "Analytics Dashboard",
+      title: "Interactive 3D Portfolio",
       type: "Frontend Application",
-      description: "Interactive data visualization dashboard with custom charts, filters, and export functionality.",
-      tech: ["React", "TypeScript", "D3.js", "Tailwind", "Vite"],
-      features: ["Interactive charts", "Data export", "Custom filters", "Responsive design"],
-      status: "Beta",
-      lines: "12,000+"
+      description: "The personal portfolio you are currently viewing, featuring an interactive 3D globe and a responsive, modern design.",
+      tech: ["React", "Three.js", "TypeScript", "Tailwind CSS", "Vite"],
+      features: ["Interactive 3D elements", "Responsive design", "Dynamic text effects", "Component-based architecture"],
+      status: "Live",
+      lines: "3,000+"
     }
   ];
 
@@ -47,7 +47,7 @@ const Projects = () => {
           </h2>
           <div className="w-24 h-1 bg-green-400 mx-auto mb-4"></div>
           <p className="text-green-300/80 font-mono">
-            git log --oneline --decorate --graph
+            git log --merges --first-parent
           </p>
         </div>
         
