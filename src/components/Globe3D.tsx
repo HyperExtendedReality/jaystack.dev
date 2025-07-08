@@ -37,9 +37,9 @@ const Globe3D = () => {
 
   const [trailTexture, glowTexture] = useMemo(() => {
     const loader = new THREE.TextureLoader();
-    const trail = loader.load('/trail.webp');
+    const trail = loader.load(`${import.meta.env.BASE_URL}trail.webp`);
     trail.wrapS = THREE.RepeatWrapping;
-    const glow = loader.load('/glow.webp');
+    const glow = loader.load(`${import.meta.env.BASE_URL}glow.webp`);
     return [trail, glow];
   }, []);
 
@@ -86,7 +86,7 @@ const Globe3D = () => {
       new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.05 })
     ));
     
-    const earthTexture = new THREE.TextureLoader().load('/earth-dark.jpeg');
+    const earthTexture = new THREE.TextureLoader().load(`${import.meta.env.BASE_URL}earth-dark.jpeg`);
     earthTexture.colorSpace = THREE.SRGBColorSpace;
     earthTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
     
@@ -119,8 +119,8 @@ const Globe3D = () => {
     const connections: Connection[] = [];
     
     Promise.all([
-      fetch('/countries.json').then(res => res.json()),
-      fetch('/servers.json').then(res => res.json())
+      fetch(`${import.meta.env.BASE_URL}countries.json`).then(res => res.json()),
+      fetch(`${import.meta.env.BASE_URL}servers.json`).then(res => res.json())
     ]).then(([countriesData, serverJson]) => {
       const servers: Server[] = serverJson.servers;
 
