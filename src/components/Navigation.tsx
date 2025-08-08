@@ -31,7 +31,7 @@ const Navigation = () => {
           <div className="flex items-center">
             <Terminal className="h-8 w-8 text-green-400 mr-2" />
             <span className="text-xl font-mono font-bold text-green-400">
-              {"<DevPortfolio />"}
+              {"<jaystack.dev />"}
             </span>
           </div>
           

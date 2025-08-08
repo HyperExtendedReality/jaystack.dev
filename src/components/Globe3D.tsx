@@ -62,7 +62,7 @@ const Globe3D = () => {
     controls.enableZoom = false;
     controls.enablePan = false;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.3;
+    controls.autoRotateSpeed = 1.0;
     controls.minPolarAngle = Math.PI / 4;
     controls.maxPolarAngle = Math.PI - Math.PI / 4;
 
