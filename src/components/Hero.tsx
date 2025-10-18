@@ -47,22 +47,22 @@ const Hero = () => {
       <div className="w-full max-w-sm p-2 border border-green-400/30 rounded-lg bg-black/50 backdrop-blur-sm z-10 
                        lg:absolute lg:top-24 lg:left-20 lg:max-w-md order-1 lg:order-none">
           <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap">
-            {`import { useState } from "react";
+{`import { useState } from "react";
 
-            export function hireDeveloper() {
-              const name = "Jay";
-              const role = "${displayText}${showCursor ? "|" : " "}";
-              const location = 'Orlando, FL';
+export function hireDeveloper() {
+  const name = "Jay";
+  const role = "${displayText}${showCursor ? "|" : " "}";
+  const location = 'Orlando, FL';
 
-              const getSkills = () => [
-                "Next.js","React", "TypeScript",
-                "jQuery", "WordPress", "GraphQL",
-                "MySQL", "PostgreSQL", "C#",
-                "Rust", "Python"
-              ];
+  const getSkills = () => [
+    "Next.js","React", "TypeScript",
+    "jQuery", "WordPress", "GraphQL",
+    "MySQL", "PostgreSQL", "C#",
+    "Rust", "Python"
+  ];
 
-              return { name, role, location, getSkills };
-            }`}
+  return { name, role, location, getSkills };
+}`}
           </pre>
       </div>
 
