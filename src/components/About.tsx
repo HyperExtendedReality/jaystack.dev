@@ -16,15 +16,16 @@ const About = () => {
               <pre className="text-green-400 font-mono text-sm overflow-x-auto">
 {`const aboutMe = {
   background: [
-    "Self-Taught Developer",
+    "Self-Taught Programmer",
     "Harvard CS50 Certified",
-    "Meta Front-end Certified"
+    "Meta Front-End Developer Certified"
   ],
   experience: "4+ years in game & web dev",
   passion: "Building immersive digital experiences",
   currentFocus: [
     "Unreal Engine & XR",
-    "FiveM Server Development (Lua)",
+    "FiveM Server Development (Lua & C#)",
+    "Unity (C#)",
     "Headless Web Architecture"
   ],
   coffee: "☕".repeat(Math.floor(Math.random() * 5) + 1)
@@ -41,7 +42,7 @@ const About = () => {
               </p>
               <div className="mt-4 p-3 bg-green-400/10 rounded border-l-4 border-green-400">
                 <p className="text-green-400 font-mono text-xs">
-                  "Code is like humor. When you have to explain it, it's bad." - Cory House
+                "Programming isn't about what you know; it's about what you can figure out.” - Chris Pine
                 </p>
               </div>
             </div>
@@ -52,7 +53,7 @@ const About = () => {
                 <li>→ Freelance developer for multiple FiveM communities</li>
                 <li>→ Shipped numerous self-directed game projects</li>
                 <li>→ Developed full-stack headless e-commerce sites</li>
-                <li>→ Completed Harvard's CS50 & Meta's FE Cert</li>
+                <li>→ Completed Harvard's CS50 & Meta's Front-End Development Cert</li>
               </ul>
             </div>
           </div>
