@@ -10,7 +10,7 @@ const Hero = () => {
 
   // No changes needed in the state or effects
   const codeSnippets = [
-    "Game Developer", "XR Specialist", "FiveM & Lua Expert", "Full-Stack Developer",
+    "Full-Stack Developer"
   ];
 
   useEffect(() => {
@@ -44,33 +44,25 @@ const Hero = () => {
     // lg:relative is crucial for absolute positioning to work relative to the section on desktop.
     <section id="home" className="min-h-screen flex flex-col items-center justify-center relative px-4 overflow-hidden py-16 lg:py-0">
       <MatrixBackground />
-
-      {/* 
-        DEVELOPER CODE SNIPPET (z-10)
-        MODIFICATION: Becomes a normal block on mobile and absolute only on desktop.
-        - `order-1` places it first on mobile.
-        - Responsive classes like `lg:absolute` apply the desktop layout.
-        - Removed `hidden` to make it visible on mobile.
-      */}
       <div className="w-full max-w-sm p-2 border border-green-400/30 rounded-lg bg-black/50 backdrop-blur-sm z-10 
                        lg:absolute lg:top-24 lg:left-20 lg:max-w-md order-1 lg:order-none">
           <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap">
-{`import { useState } from "react";
+            {`import { useState } from "react";
 
-export function hireDeveloper() {
-  const name = "Jay";
-  const role = "${displayText}${showCursor ? "|" : " "}";
-  const location = 'Orlando, FL';
+            export function hireDeveloper() {
+              const name = "Jay";
+              const role = "${displayText}${showCursor ? "|" : " "}";
+              const location = 'Orlando, FL';
 
-  const getSkills = () => [
-    "React", "TypeScript",
-    "jQuery", "WordPress",
-    "GraphQL", "MySQL",
-    "PostgreSQL"
-  ];
+              const getSkills = () => [
+                "Next.js","React", "TypeScript",
+                "jQuery", "WordPress", "GraphQL",
+                "MySQL", "PostgreSQL", "C#",
+                "Rust", "Python"
+              ];
 
-  return { name, role, location, getSkills };
-}`}
+              return { name, role, location, getSkills };
+            }`}
           </pre>
       </div>
 
