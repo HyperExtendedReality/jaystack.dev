@@ -124,7 +124,7 @@ const Contact = () => {
                 <div className="flex items-center gap-3">
                   <span className="text-blue-400">→</span>
                   <span className="text-blue-300">linkedin:</span>
-                  <span className="text-blue-400">/in/yourname</span>
+                  <span className="text-blue-400">/in/jb-hyperxr/</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-blue-400">→</span>

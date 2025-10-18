@@ -7,10 +7,8 @@ const Skills = () => {
       skills: [
         { name: "Unreal Engine (Blueprints)", level: 85 },
         { name: "Unity (C#)", level: 80 },
-        { name: "FiveM (Lua)", level: 95 },
-        { name: "XR (VR/AR)", level: 88 },
-        { name: "FiveM (C#)", level: 75 },
-      ]
+        { name: "FiveM (Lua & C#)", level: 95 },
+        { name: "XR (VR/AR)", level: 88 },      ]
     },
     {
       title: "Frontend",
