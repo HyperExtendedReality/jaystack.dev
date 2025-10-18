@@ -45,13 +45,13 @@ const Hero = () => {
     <section id="home" className="min-h-screen flex flex-col items-center justify-center relative px-4 overflow-hidden py-16 lg:py-0">
       <MatrixBackground />
       <div className="w-full max-w-sm p-2 border border-green-400/30 rounded-lg bg-black/50 backdrop-blur-sm z-10 
-                       lg:absolute lg:top-24 lg:left-20 lg:max-w-md order-1 lg:order-none">
+                       lg:absolute lg:top-24 lg:left-16 lg:max-w-md order-1 lg:order-none">
           <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap">
 {`import { useState } from "react";
 
 export function hireDeveloper() {
   const name = "Jay";
-  const role = "${displayText}${showCursor ? "|" : ""}";
+  const role = "${displayText}${showCursor ? "|" : " "}";
   const location = "Orlando, FL";
 
   const getSkills = () => [
