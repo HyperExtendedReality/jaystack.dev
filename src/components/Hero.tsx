@@ -51,8 +51,8 @@ const Hero = () => {
 
 export function hireDeveloper() {
   const name = "Jay";
-  const role = "${displayText}${showCursor ? "|" : " "}";
-  const location = 'Orlando, FL';
+  const role = "${displayText}${showCursor ? "|" : ""}";
+  const location = "Orlando, FL";
 
   const getSkills = () => [
     "Next.js","React", "TypeScript",
