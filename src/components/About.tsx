@@ -20,13 +20,16 @@ const About = () => {
     "Harvard CS50 Certified",
     "Meta Front-End Developer Certified"
   ],
-  experience: "4+ years in game & web dev",
+  web_xp: "1+ years",
+  gamedev_xp: "3+ years",
   passion: "Building immersive digital experiences",
   currentFocus: [
+    "Full-Stack Web Development",
+    "Mobile App Development",
     "Unreal Engine & XR",
-    "FiveM Server Development (Lua & C#)",
     "Unity (C#)",
     "Headless Web Architecture"
+    "FiveM Server Development (Lua & C#)"
   ],
   coffee: "☕".repeat(Math.floor(Math.random() * 5) + 1)
 };`}
@@ -53,7 +56,7 @@ const About = () => {
                 <li>→ Freelance developer for multiple FiveM communities</li>
                 <li>→ Shipped numerous self-directed game projects</li>
                 <li>→ Developed full-stack headless e-commerce sites</li>
-                <li>→ Completed Harvard's CS50 & Meta's Front-End Development Cert</li>
+                <li>→ Harvard's CS50 & Meta's Front-End Development Certified</li>
               </ul>
             </div>
           </div>

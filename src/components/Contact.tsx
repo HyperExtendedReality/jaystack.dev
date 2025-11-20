@@ -119,7 +119,7 @@ const Contact = () => {
                 <div className="flex items-center gap-3">
                   <span className="text-blue-400">→</span>
                   <span className="text-blue-300">email:</span>
-                  <span className="text-blue-400">hyperextendedreality@gmail.com</span>
+                  <span className="text-blue-400">jaystack.dev@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-blue-400">→</span>
