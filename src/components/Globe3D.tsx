@@ -32,7 +32,7 @@ type Connection = {
   trailMaterial: THREE.MeshBasicMaterial;
 };
 
-const Globe3D = () => {
+const Globe3D = ({ cameraZ = 15 }: { cameraZ?: number }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   const [trailTexture, glowTexture] = useMemo(() => {
@@ -49,7 +49,7 @@ const Globe3D = () => {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, currentMount.clientWidth / currentMount.clientHeight, 0.1, 1000);
-    camera.position.z = 15;
+    camera.position.z = cameraZ;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
@@ -171,7 +171,7 @@ const Globe3D = () => {
           const trailMaterial = new THREE.MeshBasicMaterial({ map: trailTexture, transparent: true, blending: THREE.AdditiveBlending, color: 0xffffff });
           globeGroup.add(new THREE.Mesh(tubeGeom, trailMaterial));
           
-          const packetMaterial = new THREE.SpriteMaterial({ map: glowTexture, color: 0xffffff, transparent: true, blending: THREE.AdditiveBlending });
+          const packetMaterial = new THREE.SpriteMaterial({ map: glowTexture, color: 0x4ade80, transparent: true, blending: THREE.AdditiveBlending });
           const packet1 = new THREE.Sprite(packetMaterial.clone());
           packet1.scale.set(0.08, 0.08, 1);
           const packet2 = new THREE.Sprite(packetMaterial.clone());
@@ -293,7 +293,7 @@ const Globe3D = () => {
       trailTexture.dispose();
       glowTexture.dispose();
     };
-  }, [trailTexture, glowTexture]);
+  }, [trailTexture, glowTexture, cameraZ]);
 
   return <div ref={mountRef} style={{ width: '100%', height: '100%', touchAction: 'none' }} className="cursor-grab active:cursor-grabbing" />;
 };

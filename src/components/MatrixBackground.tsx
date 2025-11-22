@@ -9,63 +9,113 @@ interface ConsoleLogBackgroundProps {
   /** Opacity of the canvas element */
   opacity?: number;
 }
-
 // --- Define a type for our log lines for better structure ---
 interface LogLine {
   text: string;
   color: string;
 }
 
-// --- A helper function to generate realistic, dynamic log lines ---
+// --- Helper functions to generate realistic logs ---
+
+const getRandomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+const getRandomIp = () => `${getRandomInt(10, 255)}.${getRandomInt(0, 255)}.${getRandomInt(0, 255)}.${getRandomInt(1, 254)}`;
+const getTimestamp = () => new Date().toISOString();
+const getSyslogTimestamp = () => {
+    const date = new Date();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${months[date.getMonth()]} ${date.getDate().toString().padStart(2, ' ')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+};
+
 const generateLogLine = (): LogLine => {
-  const logLevels = [
-    { prefix: '[INFO]', color: '#888' },
-    { prefix: '[SUCCESS]', color: '#2E7D32' }, // Darker Green
-    { prefix: '[WARN]', color: '#ED6C02' },   // Orange
-    { prefix: '[ERROR]', color: '#D32F2F' },   // Red
-    { prefix: '[DEBUG]', color: '#0288D1' },  // Blue
-  ];
+  const logTypes = ['nginx', 'syslog', 'auth', 'kernel', 'app'];
+  const type = logTypes[Math.floor(Math.random() * logTypes.length)];
 
-  const actions = [
-    'Initializing', 'Compiling', 'Fetching', 'Rendering', 'Connecting to', 'Authenticating',
-    'Validating', 'Deploying', 'Optimizing', 'Resolving dependencies for'
-  ];
+  let text = '';
+  // Muted, realistic terminal colors
+  let color = '#86efac'; // Muted green (Tailwind green-300)
 
-  const subjects = [
-    'CoreModule', 'AuthService', 'API_Endpoint:/v1/users', 'WebSocket', 'AssetPipeline',
-    'Component:Header', 'ServiceWorker', 'GraphQL_Query:GetUser', 'Stylesheet:main.css'
-  ];
-  
-  const statuses = ['...DONE', '...OK', '...FAILED', '...IN_PROGRESS'];
+  switch (type) {
+    case 'nginx':
+      const methods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'];
+      const paths = ['/api/v1/users', '/assets/main.css', '/dashboard', '/login', '/api/status', '/static/js/bundle.js'];
+      const statusCodes = [200, 201, 304, 401, 403, 404, 500];
+      const method = methods[Math.floor(Math.random() * methods.length)];
+      const path = paths[Math.floor(Math.random() * paths.length)];
+      const code = statusCodes[Math.floor(Math.random() * statusCodes.length)];
+      text = `${getRandomIp()} - - [${getTimestamp()}] "${method} ${path} HTTP/1.1" ${code} ${getRandomInt(100, 5000)} "-" "Mozilla/5.0"`;
+      if (code >= 500) color = '#fca5a5'; // Muted Red (red-300)
+      else if (code >= 400) color = '#fde047'; // Muted Yellow (yellow-300)
+      else color = '#86efac'; // Muted Green
+      break;
 
-  const level = logLevels[Math.floor(Math.random() * logLevels.length)];
-  const action = actions[Math.floor(Math.random() * actions.length)];
-  const subject = subjects[Math.floor(Math.random() * subjects.length)];
-  const status = statuses[Math.floor(Math.random() * statuses.length)];
-  const timestamp = new Date().toISOString();
+    case 'syslog':
+      const daemons = ['systemd', 'cron', 'rsyslogd'];
+      const messages = [
+        'Started Session 42 of user root.',
+        'Starting Cleanup of Temporary Directories...',
+        'Reloading OpenBSD Secure Shell server.',
+        'Removed slice User Slice of root.',
+        'Stopping User Manager for UID 0...'
+      ];
+      const daemon = daemons[Math.floor(Math.random() * daemons.length)];
+      text = `${getSyslogTimestamp()} localhost ${daemon}[${getRandomInt(100, 9999)}]: ${messages[Math.floor(Math.random() * messages.length)]}`;
+      color = '#cbd5e1'; // Slate 300
+      break;
 
-  // Make ERROR lines more distinct
-  if (level.prefix === '[ERROR]') {
-    return {
-      text: `${timestamp} ${level.prefix} Failed to ${action.toLowerCase()} ${subject}. Status: ${status}`,
-      color: level.color,
-    };
+    case 'auth':
+      const authMsgs = [
+        `Accepted publickey for root from ${getRandomIp()} port ${getRandomInt(10000, 60000)} ssh2`,
+        `Disconnected from user root ${getRandomIp()} port ${getRandomInt(10000, 60000)}`,
+        `pam_unix(sshd:session): session opened for user root by (uid=0)`,
+        `Failed password for invalid user admin from ${getRandomIp()} port ${getRandomInt(10000, 60000)} ssh2`
+      ];
+      text = `${getSyslogTimestamp()} localhost sshd[${getRandomInt(1000, 9999)}]: ${authMsgs[Math.floor(Math.random() * authMsgs.length)]}`;
+      if (text.includes('Failed')) color = '#fca5a5'; // Muted Red
+      else if (text.includes('Accepted')) color = '#86efac'; // Muted Green
+      else color = '#cbd5e1'; // Slate 300
+      break;
+
+    case 'kernel':
+      const kernelMsgs = [
+        `[${(performance.now() / 1000).toFixed(6)}] CPU0: Package temperature above threshold, cpu clock throttled (total events = ${getRandomInt(1, 100)})`,
+        `[${(performance.now() / 1000).toFixed(6)}] TCP: request_sock_TCP: Possible SYN flooding on port 80. Sending cookies.`,
+        `[${(performance.now() / 1000).toFixed(6)}] iptables: IN=eth0 OUT= MAC=00:00:00:00:00:00 SRC=${getRandomIp()} DST=${getRandomIp()} LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=${getRandomInt(1000, 9999)} DF PROTO=TCP SPT=${getRandomInt(1024, 65535)} DPT=22 WINDOW=29200 RES=0x00 SYN URGP=0`,
+        `[${(performance.now() / 1000).toFixed(6)}] EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: (null)`
+      ];
+      text = kernelMsgs[Math.floor(Math.random() * kernelMsgs.length)];
+      if (text.includes('SYN flooding')) color = '#fde047'; // Muted Yellow
+      else color = '#94a3b8'; // Slate 400
+      break;
+
+    case 'app':
+        const appLevels = ['INFO', 'WARN', 'ERROR', 'DEBUG'];
+        const appLevel = appLevels[Math.floor(Math.random() * appLevels.length)];
+        const components = ['AuthService', 'DatabaseConnector', 'PaymentGateway', 'UserWorker', 'CacheLayer'];
+        const appMsgs = [
+            'Transaction processed successfully',
+            'Connection pool exhausted, retrying...',
+            'Cache miss for key: user_profile_123',
+            'API rate limit exceeded for client',
+            'Garbage collection started'
+        ];
+        text = `[${getTimestamp()}] [${appLevel}] [${components[Math.floor(Math.random() * components.length)]}] ${appMsgs[Math.floor(Math.random() * appMsgs.length)]}`;
+        if (appLevel === 'ERROR') color = '#fca5a5';
+        else if (appLevel === 'WARN') color = '#fde047';
+        else if (appLevel === 'DEBUG') color = '#7dd3fc'; // Sky 300
+        else color = '#bef264'; // Lime 300
+        break;
   }
 
-  return {
-    text: `${timestamp} ${level.prefix} ${action} ${subject} ${Math.random() > 0.7 ? status : ''}`,
-    color: level.color,
-  };
+  return { text, color };
 };
 
 
 const ConsoleLogBackground = ({
   fontSize = 12,
-  newLineInterval = 300, // Add a new line every 300ms
-  opacity = 0.15,
+  newLineInterval = 150, // Faster logs
+  opacity = 0.15, // Reduced opacity for background feel
 }: ConsoleLogBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  // Use a ref for log lines to avoid re-renders on update
   const logLinesRef = useRef<LogLine[]>([]);
 
   useEffect(() => {
@@ -77,9 +127,8 @@ const ConsoleLogBackground = ({
 
     let animationFrameId: number;
     let lastLineTime = 0;
-    const lineHeight = fontSize * 1.5; // Spacing between lines
+    const lineHeight = fontSize * 1.4;
 
-    // --- This function initializes or re-initializes the canvas state ---
     const initialize = () => {
       canvas.width = window.innerWidth * window.devicePixelRatio;
       canvas.height = window.innerHeight * window.devicePixelRatio;
@@ -87,7 +136,6 @@ const ConsoleLogBackground = ({
       canvas.style.height = `${window.innerHeight}px`;
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
       
-      // Pre-fill the screen with some lines so it's not empty on load
       const maxLines = Math.ceil(canvas.height / lineHeight);
       if (logLinesRef.current.length === 0) {
         for (let i = 0; i < maxLines; i++) {
@@ -96,35 +144,30 @@ const ConsoleLogBackground = ({
       }
     };
 
-    // --- The core animation function ---
     const draw = (timestamp: number) => {
-      // Add a new line based on the interval
       if (timestamp - lastLineTime > newLineInterval) {
         lastLineTime = timestamp;
         logLinesRef.current.push(generateLogLine());
 
-        // Keep the array from growing infinitely
-        const maxLines = Math.ceil(canvas.height / lineHeight) + 5; // +5 for buffer
+        const maxLines = Math.ceil(canvas.height / lineHeight) + 5;
         if (logLinesRef.current.length > maxLines) {
           logLinesRef.current.shift();
         }
       }
 
-      // Clear the canvas for the new frame
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = `${fontSize}px monospace`;
+      // Realistic monospace font
+      ctx.font = `${fontSize}px 'Courier New', Courier, monospace`;
       
-      // Draw lines from the bottom up
       const lines = logLinesRef.current;
       for (let i = 0; i < lines.length; i++) {
-        const line = lines[lines.length - 1 - i]; // Get line from end of array
-        const y = canvas.height / window.devicePixelRatio - (i * lineHeight);
+        const line = lines[lines.length - 1 - i];
+        const y = canvas.height / window.devicePixelRatio - (i * lineHeight) - 20; // Start slightly up
         
-        // Stop drawing if we're off-screen
         if (y < -lineHeight) break;
 
         ctx.fillStyle = line.color;
-        ctx.fillText(line.text, 10, y);
+        ctx.fillText(line.text, 20, y); // Left padding
       }
     };
 
@@ -134,13 +177,12 @@ const ConsoleLogBackground = ({
     };
 
     const handleResize = () => {
-      // Re-initialize canvas dimensions but keep existing logs
       initialize();
     };
     
     initialize();
     window.addEventListener('resize', handleResize);
-    animate(0); // Start the animation
+    animate(0);
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);
@@ -151,8 +193,8 @@ const ConsoleLogBackground = ({
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0"
-      style={{ background: 'transparent', opacity }}
+      className="fixed inset-0 pointer-events-none z-0 blur-[1px]" // Added blur
+      style={{ background: '#050505', opacity }} // Dark background
     />
   );
 };
