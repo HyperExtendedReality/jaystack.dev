@@ -1,19 +1,31 @@
 import React, { useState } from "react";
+import home_dark from "../../assets/home-dark.png";
+import home_light from "../../assets/home-light.png";
+import camera from "../../assets/camera.png";
+import results from "../../assets/results.png";
+import library_dark from "../../assets/library-dark.png";
+import library_light from "../../assets/library-light.png";
+import afterscan_dark from "../../assets/afterscan-dark.png";
+import afterscan_light from "../../assets/afterscan-light.png";
+import settings_dark from "../../assets/settings-dark.png";
+import settings_light from "../../assets/settings-light.png";
+import donation_dark from "../../assets/donation-dark.png";
+import donation_light from "../../assets/donation-light.png";
 
 // Make sure these images are placed in your public/assets folder
 const IMAGES = {
-  home_dark: "src/assets/home-dark.png",
-  home_light: "src/assets/home-light.png",
-  camera: "src/assets/camera.png",
-  results: "src/assets/results.png",
-  library_dark: "src/assets/library-dark.png",
-  library_light: "src/assets/library-light.png",
-  afterscan_dark: "src/assets/afterscan-dark.png",
-  afterscan_light: "src/assets/afterscan-light.png",
-  settings_dark: "src/assets/settings-dark.png",
-  settings_light: "src/assets/settings-light.png",
-  donation_dark: "src/assets/donation-dark.png",
-  donation_light: "src/assets/donation-light.png",
+  home_dark: home_dark,
+  home_light: home_light,
+  camera: camera,
+  results: results,
+  library_dark: library_dark,
+  library_light: library_light,
+  afterscan_dark: afterscan_dark,
+  afterscan_light: afterscan_light,
+  settings_dark: settings_dark,
+  settings_light: settings_light,
+  donation_dark: donation_dark,
+  donation_light: donation_light,
 };
 
 const FungEyeDemo = () => {
