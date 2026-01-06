@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Github, Layers } from "lucide-react";
+import { Github, Layers, AlertTriangle } from "lucide-react";
 import FungEyeDemo from "./fungeye_demo/fungeye-demo";
 
 const Projects = () => {
@@ -17,6 +17,7 @@ const Projects = () => {
       color: "from-violet-500 to-purple-600",
       stats: { type: "Software Dev" },
       link: "https://github.com/HyperExtendedReality/infiniv/tree/master",
+      wip: true,
     },
     {
       id: 5,
@@ -39,6 +40,18 @@ const Projects = () => {
       color: "from-blue-400 to-cyan-500",
       stats: { type: "Library", lines: "Open Source" },
       link: "https://github.com/HyperExtendedReality/r3f-jolt",
+      wip: true,
+    },
+    {
+      id: 8,
+      title: "r3f-ammo",
+      subtitle: "React Three Fiber Physics",
+      description:
+        "A comprehensive wrapper for Ammo.js in React Three Fiber, providing a robust physics engine integration for complex 3D web simulations.",
+      tech: ["React", "Three.js", "Ammo.js", "WASM"],
+      color: "from-orange-500 to-red-600",
+      stats: { type: "Library" },
+      link: "https://github.com/HyperExtendedReality/r3f-ammo/tree/main",
     },
     {
       id: 7,
@@ -170,6 +183,13 @@ const Projects = () => {
                         <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-gray-400 border border-white/5">
                           {project.stats.type}
                         </span>
+                        {/* @ts-ignore */}
+                        {project.wip && (
+                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 flex items-center gap-1">
+                            <AlertTriangle className="w-3 h-3" />
+                            WIP
+                          </span>
+                        )}
                       </div>
                     </div>
 
