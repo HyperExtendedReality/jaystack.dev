@@ -12,8 +12,8 @@ const Projects = () => {
       title: "Infiniv",
       subtitle: "Next-Gen FiveM Fork",
       description:
-        "A high-performance fork of FiveM upgrading the netcode to use SpacetimeDB and replacing the embedded CEF UI with Ultralight for maximum efficiency.",
-      tech: ["C++", "Rust", "SpacetimeDB", "Ultralight"],
+        "A high-performance fork of FiveM upgrading the netcode to use SpacetimeDB and replacing the embedded CEF UI with WebView2 for maximum efficiency.",
+      tech: ["C++", "Rust", "SpacetimeDB", "WebView2"],
       color: "from-violet-500 to-purple-600",
       stats: { type: "Software Dev" },
       link: "https://github.com/HyperExtendedReality/infiniv/tree/master",
