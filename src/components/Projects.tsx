@@ -90,7 +90,7 @@ const Projects = () => {
       subtitle: "FiveM Server Infrastructure",
       title: "GTA:Rewind Lead Developer",
       description:
-        "Engineered a high-concurrency server architecture for GTA:Rewind, optimizing Lua/C# and NUI/DUI interfaces across both client and server to sustain peak performance under heavy loads, while fortifying the network via a custom Cloudflare Proxy and Tunnel system to ensure resilient DDoS mitigation without compromising latency.",
+        "Led FiveM Lua backend development for GTA:Rewind, building gameplay systems, server-side resources, database-backed features, and performance-focused client/server workflows for a high-concurrency roleplay environment.",
       tech: [
         "Lua",
         "C#",
