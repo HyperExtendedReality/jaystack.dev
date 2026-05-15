@@ -107,6 +107,16 @@ const Projects = () => {
       stats: { type: "Game Dev" },
     },
     {
+      id: 9,
+      title: "UnleashedRP Lead Developer",
+      subtitle: "FiveM Roleplay Server",
+      description:
+        "Led full-stack development for UnleashedRP, building gameplay systems, database-backed server resources, admin tooling, and interactive NUI experiences across client and server workflows.",
+      tech: ["Svelte", "React", "TypeScript", "SQL", "Lua", "JavaScript"],
+      color: "from-rose-500 to-orange-500",
+      stats: { type: "Full-Stack" },
+    },
+    {
       id: 3,
       title: "Portfolio V3",
       subtitle: "Web Portfolio",

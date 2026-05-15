@@ -1,73 +1,43 @@
-# Welcome to your Lovable project
+# JayStack
 
-## Project info
+Full-stack developer, software engineer, and XR/game developer focused on building polished, performant, and practical digital products.
 
-**URL**: https://lovable.dev/projects/36b1f804-0377-410c-9b78-630dd1acc69f
+I work across modern web applications, real-time game systems, backend architecture, and interactive user experiences. My background includes full-stack product development, FiveM server infrastructure, React and TypeScript applications, Lua gameplay systems, database-backed tools, and performance-minded engineering across both client and server environments.
 
-## How can I edit this code?
+## What I Do
 
-There are several ways of editing your application.
+- Build full-stack web applications with React, TypeScript, and modern frontend tooling
+- Develop backend systems, APIs, database-driven features, and production workflows
+- Create FiveM resources, NUI interfaces, server systems, and gameplay infrastructure
+- Design interactive experiences using 3D, motion, and game-focused technologies
+- Improve performance, reliability, maintainability, and developer experience
 
-**Use Lovable**
+## Featured Work
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/36b1f804-0377-410c-9b78-630dd1acc69f) and start prompting.
+This portfolio highlights selected projects across software, web, and game development, including:
 
-Changes made via Lovable will be committed automatically to this repo.
+- Lead development for FiveM roleplay and infrastructure projects
+- Open-source React Three Fiber physics libraries
+- Mobile and web applications with modern UI systems
+- Game tooling, server systems, and experimental software projects
 
-**Use your preferred IDE**
+## Core Technologies
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+React, TypeScript, JavaScript, Svelte, Lua, SQL, C#, Rust, Python, Tailwind CSS, Three.js, React Native, Node.js, MariaDB, MongoDB, PostgreSQL, and FiveM/NUI development.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Professional Focus
 
-Follow these steps:
+I am interested in opportunities where strong engineering and thoughtful product development overlap. I enjoy roles that involve ownership, problem solving, system design, performance optimization, and building tools or experiences that people actually use.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+I am especially well-suited for work involving:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- Full-stack application development
+- Frontend engineering and interface architecture
+- Game, XR, or real-time interactive systems
+- Backend and database-driven product features
+- Developer tools, internal platforms, and technical product work
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Contact
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/36b1f804-0377-410c-9b78-630dd1acc69f) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Email: jaystack.dev@gmail.com  
+GitHub: https://github.com/HyperExtendedReality  
