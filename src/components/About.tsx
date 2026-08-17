@@ -1,158 +1,82 @@
 import { motion } from "motion/react";
-import { Gauge, BrainCircuit, Terminal, Layers, ShieldCheck, Minus, Square, X } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { Gauge, Layers3, ShieldCheck } from "lucide-react";
 
-const About = () => {
-  return (
-    <section id="about" className="py-20 px-4 relative">
-      {/* Subtle Background */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
-      </div>
+const principles: Array<{ title: string; description: string; icon: LucideIcon }> = [
+  { title: "Start with the product", description: "Make the useful thing clear before adding complexity.", icon: Layers3 },
+  { title: "Engineer for reality", description: "Design around performance, reliability, and real constraints.", icon: Gauge },
+  { title: "Ship with confidence", description: "Keep systems understandable, testable, and easy to evolve.", icon: ShieldCheck },
+];
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        <motion.div 
+const About = () => (
+  <section id="about" aria-labelledby="about-title" className="relative overflow-hidden px-4 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+    <div className="pointer-events-none absolute left-[-8rem] top-1/3 h-80 w-80 rounded-full bg-green-400/[0.04] blur-3xl" />
+    <div className="relative mx-auto max-w-7xl">
+      <div className="grid gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:gap-20">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.5 }}
         >
-          <h2 className="text-4xl font-bold mb-4 text-white">
-            About Me
+          <p className="mb-3 font-mono text-xs uppercase tracking-[0.24em] text-green-400">About / approach</p>
+          <h2 id="about-title" className="max-w-3xl text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl lg:text-5xl">
+            Product thinking backed by deep implementation.
           </h2>
-          <div className="w-16 h-1 bg-green-500 mx-auto rounded-full" />
+          <p className="mt-6 max-w-2xl text-base leading-7 text-white/[0.58] sm:text-lg sm:leading-8">
+            I build across interface, infrastructure, intelligent systems, and real-time experiences—so the final product feels coherent, not stitched together.
+          </p>
+          <p className="mt-4 max-w-xl text-sm leading-6 text-white/40 sm:text-base sm:leading-7">
+            I’m most useful on ambitious projects that need technical range, clear decisions, and a strong path from idea to production.
+          </p>
+
+          <div className="mt-8 flex flex-wrap gap-2">
+            {["Product-minded", "Performance-aware", "End-to-end ownership"].map((quality) => (
+              <span key={quality} className="rounded-full border border-white/[0.08] bg-white/[0.035] px-3.5 py-2 text-xs text-white/[0.55]">
+                {quality}
+              </span>
+            ))}
+          </div>
         </motion.div>
-        
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Professional Bio */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-6"
-          >
-            <h3 className="text-2xl font-semibold text-white flex items-center gap-3">
-              <Terminal className="text-green-400 w-6 h-6" />
-              Full-Stack, Software, XR/Game Developer
-            </h3>
-            
-            <p className="text-gray-300 leading-relaxed text-lg">
-              I am a versatile developer with expertise spanning <span className="text-green-400 font-medium">full-stack web applications</span>, <span className="text-emerald-400 font-medium">high-performance software</span>, and <span className="text-teal-400 font-medium">immersive XR & game experiences</span>.
-              I bridge the gap between complex backend logic, interactive 3D environments, and intuitive frontend interfaces.
-            </p>
 
-            <p className="text-gray-400 leading-relaxed">
-              My approach is practical and results-driven: write clean, maintainable code that solves real business problems. 
-              Whether building scalable web platforms or optimizing real-time rendering engines, I am constantly refining my stack to deliver the best possible solutions.
-            </p>
-
-            <div className="grid grid-cols-2 gap-4 pt-4">
-              <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                <Gauge className="text-green-400 mb-2 w-5 h-5" />
-                <h4 className="text-white font-medium text-sm">Performance First</h4>
-                <p className="text-gray-500 text-xs mt-1">Optimized & Efficient Code</p>
-              </div>
-              <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                <Layers className="text-cyan-400 mb-2 w-5 h-5" />
-                <h4 className="text-white font-medium text-sm">Modern Architecture</h4>
-                <p className="text-gray-500 text-xs mt-1">Scalable & Future-Proof</p>
-              </div>
-              <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                <ShieldCheck className="text-teal-400 mb-2 w-5 h-5" />
-                <h4 className="text-white font-medium text-sm">Robust Engineering</h4>
-                <p className="text-gray-500 text-xs mt-1">Type-Safe & Reliable</p>
-              </div>
-              <div className="p-4 rounded-lg bg-white/5 border border-white/10">
-                <BrainCircuit className="text-emerald-400 mb-2 w-5 h-5" />
-                <h4 className="text-white font-medium text-sm">Agile Delivery</h4>
-                <p className="text-gray-500 text-xs mt-1">Proactive & Self-Managed</p>
-              </div>
+        <motion.div
+          initial={{ opacity: 0, x: 24 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.55, delay: 0.08 }}
+          className="relative"
+        >
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-green-400/10 via-transparent to-cyan-400/[0.06] blur-2xl" />
+          <div className="relative overflow-hidden rounded-3xl border border-white/[0.09] bg-white/[0.03] p-3 backdrop-blur-sm sm:p-4">
+            <div className="flex items-center justify-between px-3 pb-3 pt-2">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-green-300/70">How I work</span>
+              <span className="h-2 w-2 rounded-full bg-green-300 shadow-[0_0_12px_rgba(134,239,172,0.65)]" />
             </div>
-          </motion.div>
-          
-          {/* Technical Profile Code Block */}
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="relative"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl blur-2xl" />
-            <div className="relative rounded-xl bg-[#0f1115] border border-white/10 shadow-2xl overflow-hidden">
-              {/* Window Header */}
-              <div className="flex items-center justify-between px-4 py-3 bg-white/5 border-b border-white/10">
-                <span className="text-xs text-gray-500 font-mono">profile.ts</span>
-                <div className="flex gap-3">
-                  <Minus className="w-3 h-3 text-gray-500 hover:text-white cursor-pointer transition-colors" />
-                  <Square className="w-2.5 h-2.5 text-gray-500 hover:text-white cursor-pointer transition-colors" />
-                  <X className="w-3 h-3 text-gray-500 hover:text-red-500 cursor-pointer transition-colors" />
-                </div>
-              </div>
-
-              {/* Code Content */}
-              <div className="p-6 overflow-x-auto">
-                <pre className="font-mono text-sm leading-relaxed">
-                  <code className="block">
-                    <span className="text-purple-400">const</span> <span className="text-yellow-300">developer</span> <span className="text-white">=</span> <span className="text-white">{`{`}</span>
-                  </code>
-                  
-                  {/* Name */}
-                  <code className="block pl-4">
-                    <span className="text-sky-300">name:</span> <span className="text-emerald-300">"Jay"</span><span className="text-white">,</span>
-                  </code>
-
-                  {/* Fixed: Role is now an array with proper commas */}
-                  <code className="block pl-4">
-                    <span className="text-sky-300">role:</span> <span className="text-white">[</span>
-                    <span className="text-emerald-300">"Full-Stack"</span><span className="text-white">, </span>
-                    <span className="text-emerald-300">"Software"</span><span className="text-white">, </span>
-                    <span className="text-emerald-300">"XR/Game Dev"</span>
-                    <span className="text-white">],</span>
-                  </code>
-
-                  {/* Focus Array Start */}
-                  <code className="block pl-4">
-                    <span className="text-sky-300">focus:</span> <span className="text-white">[</span>
-                  </code>
-                  
-                  {/* Focus Items */}
-                  <code className="block pl-8">
-                    <span className="text-emerald-300">"React", "Next.js", "React Native", "TypeScript",</span>
-                  </code>
-                  <code className="block pl-8">
-                    <span className="text-emerald-300">"C#", "Python", "PHP", "Golang", "Rust",</span>
-                  </code>
-                  <code className="block pl-8">
-                    <span className="text-emerald-300">"High-performance Back-End Solutions",</span>
-                  </code>
-                  <code className="block pl-8">
-                    <span className="text-emerald-300">"XR / Game Development"</span>
-                  </code>
-                  
-                  {/* Focus Array End */}
-                  <code className="block pl-4">
-                    <span className="text-white">],</span>
-                  </code>
-
-                  {/* Status */}
-                  <code className="block pl-4">
-                    <span className="text-sky-300">status:</span> <span className="text-emerald-300">"Open to Opportunities"</span>
-                  </code>
-
-                  <code className="block">
-                    <span className="text-white">{`};`}</span>
-                  </code>
-                </pre>
-              </div>
+            <div className="space-y-2">
+              {principles.map(({ title, description, icon: Icon }, index) => (
+                <motion.div
+                  key={title}
+                  initial={{ opacity: 0, x: 12 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.16 + index * 0.08 }}
+                  className="group flex gap-4 rounded-2xl border border-white/[0.06] bg-black/25 p-4 transition-colors hover:border-green-300/15 hover:bg-white/[0.035] sm:p-5"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-green-300">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <h3 className="text-sm font-medium text-white sm:text-base">{title}</h3>
+                    <p className="mt-1 text-xs leading-5 text-white/40 sm:text-sm sm:leading-6">{description}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default About;

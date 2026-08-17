@@ -1,13 +1,15 @@
 # JayStack
 
-Full-stack developer, software engineer, and XR/game developer focused on building polished, performant, and practical digital products.
+Product-focused developer working across full-stack web, AI/ML engineering, games, XR, mobile apps, and performance-minded software.
 
-I work across modern web applications, real-time game systems, backend architecture, and interactive user experiences. My background includes full-stack product development, FiveM server infrastructure, React and TypeScript applications, Lua gameplay systems, database-backed tools, and performance-minded engineering across both client and server environments.
+I work across modern web applications, production AI pipelines, real-time game systems, backend architecture, mobile products, and interactive 3D experiences. My background includes model training and quantization, inference API delivery, full-stack product development, FiveM server infrastructure, React and TypeScript applications, Lua gameplay systems, database-backed tools, and performance-minded engineering across client and server environments.
 
 ## What I Do
 
 - Build full-stack web applications with React, TypeScript, and modern frontend tooling
 - Develop backend systems, APIs, database-driven features, and production workflows
+- Train, fine-tune, quantize, and deploy AI models through reliable inference APIs
+- Build cross-platform mobile apps and on-device machine-learning experiences
 - Create FiveM resources, NUI interfaces, server systems, and gameplay infrastructure
 - Design interactive experiences using 3D, motion, and game-focused technologies
 - Improve performance, reliability, maintainability, and developer experience
@@ -23,7 +25,7 @@ This portfolio highlights selected projects across software, web, and game devel
 
 ## Core Technologies
 
-React, TypeScript, JavaScript, Svelte, Lua, SQL, C#, Rust, Python, Tailwind CSS, Three.js, React Native, Node.js, MariaDB, MongoDB, PostgreSQL, and FiveM/NUI development.
+React, TypeScript, JavaScript, Svelte, Lua, SQL, C#, C++, Rust, Python, Go, Tailwind CSS, Three.js, React Native, Node.js, TensorFlow, YOLO, MariaDB, MongoDB, PostgreSQL, and FiveM/NUI development.
 
 ## Professional Focus
 
@@ -32,6 +34,8 @@ I am interested in opportunities where strong engineering and thoughtful product
 I am especially well-suited for work involving:
 
 - Full-stack application development
+- AI/ML engineering, model optimization, and inference systems
+- Mobile application development and on-device ML
 - Frontend engineering and interface architecture
 - Game, XR, or real-time interactive systems
 - Backend and database-driven product features

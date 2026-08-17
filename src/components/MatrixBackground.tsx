@@ -35,7 +35,7 @@ const generateLogLine = (): LogLine => {
   let color = '#86efac'; // Muted green (Tailwind green-300)
 
   switch (type) {
-    case 'nginx':
+    case 'nginx': {
       const methods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'];
       const paths = ['/api/v1/users', '/assets/main.css', '/dashboard', '/login', '/api/status', '/static/js/bundle.js'];
       const statusCodes = [200, 201, 304, 401, 403, 404, 500];
@@ -47,8 +47,9 @@ const generateLogLine = (): LogLine => {
       else if (code >= 400) color = '#fde047'; // Muted Yellow (yellow-300)
       else color = '#86efac'; // Muted Green
       break;
+    }
 
-    case 'syslog':
+    case 'syslog': {
       const daemons = ['systemd', 'cron', 'rsyslogd'];
       const messages = [
         'Started Session 42 of user root.',
@@ -61,8 +62,9 @@ const generateLogLine = (): LogLine => {
       text = `${getSyslogTimestamp()} localhost ${daemon}[${getRandomInt(100, 9999)}]: ${messages[Math.floor(Math.random() * messages.length)]}`;
       color = '#cbd5e1'; // Slate 300
       break;
+    }
 
-    case 'auth':
+    case 'auth': {
       const authMsgs = [
         `Accepted publickey for root from ${getRandomIp()} port ${getRandomInt(10000, 60000)} ssh2`,
         `Disconnected from user root ${getRandomIp()} port ${getRandomInt(10000, 60000)}`,
@@ -74,8 +76,9 @@ const generateLogLine = (): LogLine => {
       else if (text.includes('Accepted')) color = '#86efac'; // Muted Green
       else color = '#cbd5e1'; // Slate 300
       break;
+    }
 
-    case 'kernel':
+    case 'kernel': {
       const kernelMsgs = [
         `[${(performance.now() / 1000).toFixed(6)}] CPU0: Package temperature above threshold, cpu clock throttled (total events = ${getRandomInt(1, 100)})`,
         `[${(performance.now() / 1000).toFixed(6)}] TCP: request_sock_TCP: Possible SYN flooding on port 80. Sending cookies.`,
@@ -86,8 +89,9 @@ const generateLogLine = (): LogLine => {
       if (text.includes('SYN flooding')) color = '#fde047'; // Muted Yellow
       else color = '#94a3b8'; // Slate 400
       break;
+    }
 
-    case 'app':
+    case 'app': {
         const appLevels = ['INFO', 'WARN', 'ERROR', 'DEBUG'];
         const appLevel = appLevels[Math.floor(Math.random() * appLevels.length)];
         const components = ['AuthService', 'DatabaseConnector', 'PaymentGateway', 'UserWorker', 'CacheLayer'];
@@ -104,6 +108,7 @@ const generateLogLine = (): LogLine => {
         else if (appLevel === 'DEBUG') color = '#7dd3fc'; // Sky 300
         else color = '#bef264'; // Lime 300
         break;
+    }
   }
 
   return { text, color };
@@ -128,15 +133,17 @@ const ConsoleLogBackground = ({
     let animationFrameId: number;
     let lastLineTime = 0;
     const lineHeight = fontSize * 1.4;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const initialize = () => {
-      canvas.width = window.innerWidth * window.devicePixelRatio;
-      canvas.height = window.innerHeight * window.devicePixelRatio;
+      const pixelRatio = Math.min(window.devicePixelRatio, 1.5);
+      canvas.width = window.innerWidth * pixelRatio;
+      canvas.height = window.innerHeight * pixelRatio;
       canvas.style.width = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
       
-      const maxLines = Math.ceil(canvas.height / lineHeight);
+      const maxLines = Math.ceil(window.innerHeight / lineHeight);
       if (logLinesRef.current.length === 0) {
         for (let i = 0; i < maxLines; i++) {
           logLinesRef.current.unshift(generateLogLine());
@@ -149,20 +156,20 @@ const ConsoleLogBackground = ({
         lastLineTime = timestamp;
         logLinesRef.current.push(generateLogLine());
 
-        const maxLines = Math.ceil(canvas.height / lineHeight) + 5;
+        const maxLines = Math.ceil(window.innerHeight / lineHeight) + 5;
         if (logLinesRef.current.length > maxLines) {
           logLinesRef.current.shift();
         }
       }
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
       // Realistic monospace font
       ctx.font = `${fontSize}px 'Courier New', Courier, monospace`;
       
       const lines = logLinesRef.current;
       for (let i = 0; i < lines.length; i++) {
         const line = lines[lines.length - 1 - i];
-        const y = canvas.height / window.devicePixelRatio - (i * lineHeight) - 20; // Start slightly up
+        const y = window.innerHeight - (i * lineHeight) - 20; // Start slightly up
         
         if (y < -lineHeight) break;
 
@@ -182,7 +189,8 @@ const ConsoleLogBackground = ({
     
     initialize();
     window.addEventListener('resize', handleResize);
-    animate(0);
+    if (reduceMotion) draw(0);
+    else animate(0);
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);

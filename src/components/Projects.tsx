@@ -1,251 +1,251 @@
-import { useState } from "react";
 import { motion } from "motion/react";
-import { Github, Layers, AlertTriangle } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, Github, Layers, ScanLine, Sparkles } from "lucide-react";
 import FungEyeDemo from "./fungeye_demo/fungeye-demo";
 
-const Projects = () => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+type Project = {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  contribution: string;
+  tech: string[];
+  color: string;
+  type: string;
+  link?: string;
+  wip?: boolean;
+};
 
-  const projects = [
-    {
-      id: 4,
-      title: "Infiniv",
-      subtitle: "Next-Gen FiveM Fork",
-      description:
-        "A high-performance fork of FiveM upgrading the netcode to use SpacetimeDB and replacing the embedded CEF UI with WebView2 for maximum efficiency.",
-      tech: ["C++", "Rust", "SpacetimeDB", "WebView2"],
-      color: "from-violet-500 to-purple-600",
-      stats: { type: "Software Dev" },
-      link: "https://github.com/HyperExtendedReality/infiniv/tree/master",
-      wip: true,
-    },
-    {
-      id: 5,
-      title: "Codewalker",
-      subtitle: "Game World Editor",
-      description:
-        "A fork of the GTA V 3D Map Editor upgrading DDS handling to DirectXTexNET and migrating to .NET 9.0. Features WIP optimizations for faster world and asset loading.",
-      tech: ["C#", ".NET 9.0", "DirectXTexNET", "WinForms"],
-      color: "from-blue-500 to-indigo-600",
-      stats: { lines: "Fork", type: "Tooling" },
-      link: "https://github.com/HyperExtendedReality/CodeWalker",
-    },
-    {
-      id: 6,
-      title: "r3f-jolt",
-      subtitle: "React Three Fiber Physics",
-      description:
-        "A high-performance bridge between React Three Fiber and Jolt Physics, enabling complex rigid body simulations in the browser via WebAssembly.",
-      tech: ["React", "Three.js", "Jolt Physics", "WASM"],
-      color: "from-blue-400 to-cyan-500",
-      stats: { type: "Library", lines: "Open Source" },
-      link: "https://github.com/HyperExtendedReality/r3f-jolt",
-      wip: true,
-    },
-    {
-      id: 8,
-      title: "r3f-ammo",
-      subtitle: "React Three Fiber Physics",
-      description:
-        "A comprehensive wrapper for Ammo.js in React Three Fiber, providing a robust physics engine integration for complex 3D web simulations.",
-      tech: ["React", "Three.js", "Ammo.js", "WASM"],
-      color: "from-orange-500 to-red-600",
-      stats: { type: "Library" },
-      link: "https://github.com/HyperExtendedReality/r3f-ammo/tree/main",
-    },
-    {
-      id: 7,
-      title: "FungEye",
-      subtitle: "AI Mushroom Identifier",
-      description:
-        "Real-time mushroom identification using on-device machine learning (YOLO). Features offline support, community data collection, and a sleek mobile-first UI.",
-      tech: ["React Native", "TensorFlow", "YOLO", "Expo"],
-      color: "from-green-500 to-lime-500",
-      stats: { type: "Mobile App" },
-      link: "https://github.com/HyperExtendedReality/FungEye",
-      demo: (
-        <div
-          className="w-full h-full flex items-center justify-center overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
+const featuredProject: Project = {
+  id: 7,
+  title: "FungEye",
+  subtitle: "AI Mushroom Identifier",
+  description:
+    "An offline-first mobile vision app using an optimized YOLO model for fast mushroom identification without depending on a network connection.",
+  contribution:
+    "Designed the mobile product, integrated on-device inference, and built the capture-to-identification experience.",
+  tech: ["React Native", "TensorFlow", "YOLO", "On-device ML"],
+  color: "from-green-400 to-lime-400",
+  type: "Mobile AI",
+  link: "https://github.com/HyperExtendedReality/FungEye",
+};
+
+const projects: Project[] = [
+  {
+    id: 4,
+    title: "Infiniv",
+    subtitle: "Next-Gen FiveM Fork",
+    description:
+      "Reworking FiveM infrastructure around faster networking, a modern data layer, and a leaner embedded UI.",
+    contribution:
+      "Exploring a systems-level architecture that pairs C++ and Rust with SpacetimeDB and WebView2.",
+    tech: ["C++", "Rust", "SpacetimeDB", "WebView2"],
+    color: "from-violet-400 to-fuchsia-500",
+    type: "Systems",
+    link: "https://github.com/HyperExtendedReality/infiniv/tree/master",
+    wip: true,
+  },
+  {
+    id: 5,
+    title: "Codewalker",
+    subtitle: "Game World Editor",
+    description:
+      "Modernizing a GTA V world editor with .NET 9, upgraded texture handling, and faster asset workflows.",
+    contribution:
+      "Updated the toolchain and core rendering dependencies while preserving a mature desktop workflow.",
+    tech: ["C#", ".NET 9.0", "DirectXTexNET", "WinForms"],
+    color: "from-blue-400 to-indigo-500",
+    type: "Tooling",
+    link: "https://github.com/HyperExtendedReality/CodeWalker",
+  },
+  {
+    id: 6,
+    title: "r3f-jolt",
+    subtitle: "React Three Fiber Physics",
+    description:
+      "A WebAssembly bridge bringing high-performance Jolt rigid-body physics into React Three Fiber.",
+    contribution:
+      "Connecting a low-level physics engine to React's declarative 3D ecosystem through a practical library API.",
+    tech: ["React", "Three.js", "Jolt Physics", "WASM"],
+    color: "from-cyan-400 to-sky-500",
+    type: "Open source",
+    link: "https://github.com/HyperExtendedReality/r3f-jolt",
+    wip: true,
+  },
+  {
+    id: 2,
+    title: "GTA:Rewind",
+    subtitle: "Lead Developer · FiveM Infrastructure",
+    description:
+      "Led backend and gameplay development for a high-concurrency FiveM roleplay environment.",
+    contribution:
+      "Owned server architecture and shipped gameplay systems across Lua, C#, React, and PostgreSQL.",
+    tech: ["Lua", "C#", "React", "PostgreSQL"],
+    color: "from-emerald-400 to-teal-500",
+    type: "Game systems",
+  },
+  {
+    id: 9,
+    title: "UnleashedRP",
+    subtitle: "Lead Developer · Roleplay Platform",
+    description:
+      "Built gameplay systems, server resources, admin tooling, and interactive NUI across the full stack.",
+    contribution:
+      "Led delivery from data and game logic through the player-facing Svelte interfaces.",
+    tech: ["Svelte", "TypeScript", "SQL", "Lua"],
+    color: "from-rose-400 to-orange-500",
+    type: "Full stack",
+  },
+];
+
+const ProjectCard = ({ project, index }: { project: Project; index: number }) => (
+  <motion.article
+    initial={{ opacity: 0, y: 24 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, amount: 0.25 }}
+    transition={{ duration: 0.45, delay: (index % 3) * 0.07 }}
+    whileHover={{ y: -4 }}
+    className="group relative mb-5 inline-block w-full break-inside-avoid overflow-hidden rounded-2xl border border-white/[0.09] bg-[#080a08] p-5 align-top shadow-xl shadow-black/15 transition-colors hover:border-white/20 sm:p-6"
+  >
+    <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${project.color} opacity-[0.045] transition-opacity duration-500 group-hover:opacity-[0.1]`} />
+    <div className="relative">
+      <div className="mb-7 flex items-start justify-between gap-4">
+        <div className={`rounded-xl border border-white/10 bg-gradient-to-br ${project.color} p-2.5 shadow-lg shadow-black/25`}>
+          <Layers className="h-5 w-5 text-white" />
+        </div>
+        <div className="flex flex-wrap justify-end gap-2">
+          <span className="rounded-full border border-white/[0.07] bg-white/[0.04] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-white/45">
+            {project.type}
+          </span>
+          {project.wip && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-amber-300/15 bg-amber-300/[0.07] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-amber-200/70">
+              <AlertTriangle className="h-3 w-3" /> In progress
+            </span>
+          )}
+        </div>
+      </div>
+
+      <p className={`mb-2 bg-gradient-to-r ${project.color} bg-clip-text text-[11px] font-medium uppercase tracking-[0.13em] text-transparent`}>
+        {project.subtitle}
+      </p>
+      <h3 className="text-2xl font-semibold tracking-[-0.025em] text-white">{project.title}</h3>
+      <p className="mt-4 text-sm leading-6 text-white/52">{project.description}</p>
+
+      <div className="my-5 h-px bg-gradient-to-r from-white/10 to-transparent" />
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/25">My work</p>
+      <p className="mt-2 text-sm leading-6 text-white/65">{project.contribution}</p>
+
+      <div className="mt-6 flex flex-wrap gap-1.5">
+        {project.tech.map((tech) => (
+          <span key={tech} className="rounded-md border border-white/[0.07] bg-black/30 px-2.5 py-1 text-[10px] text-white/50">
+            {tech}
+          </span>
+        ))}
+      </div>
+
+      {project.link && (
+        <a
+          href={project.link}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-6 inline-flex items-center gap-2 text-xs font-medium text-white/55 transition-colors hover:text-white focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-300"
+          aria-label={`View ${project.title} source on GitHub`}
         >
-          <div className="scale-[0.425] transform-gpu origin-center">
+          <Github className="h-4 w-4" /> View source <ArrowUpRight className="h-3.5 w-3.5" />
+        </a>
+      )}
+    </div>
+  </motion.article>
+);
+
+const Projects = () => (
+  <section id="projects" aria-labelledby="projects-title" className="relative overflow-hidden px-4 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+    <div className="pointer-events-none absolute left-1/2 top-1/4 h-[40rem] w-[40rem] -translate-x-1/2 rounded-full bg-green-500/[0.055] blur-3xl sm:h-[55rem] sm:w-[55rem]" />
+
+    <div className="relative z-10 mx-auto max-w-7xl">
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.55 }}
+        className="mx-auto mb-10 max-w-3xl text-center sm:mb-12"
+      >
+        <p className="mb-3 font-mono text-xs uppercase tracking-[0.24em] text-green-400">Selected projects / 06</p>
+        <h2 id="projects-title" className="text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl md:text-5xl">
+          Work that shows how I build.
+        </h2>
+        <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-white/50">
+          Real products, open-source tools, and production systems spanning mobile AI, real-time 3D, and game infrastructure.
+        </p>
+      </motion.div>
+
+      <motion.article
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.6 }}
+        className="group relative mb-5 grid overflow-hidden rounded-[2rem] border border-green-300/15 bg-[#070a07] shadow-2xl shadow-black/30 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.8fr)]"
+      >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_35%,rgba(132,204,22,0.12),transparent_34%)]" />
+        <div className="relative z-10 flex flex-col justify-center p-6 sm:p-8 lg:p-10 xl:p-12">
+          <div className="mb-8 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-green-300/15 bg-green-300/[0.07] px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-green-200/75">
+              <Sparkles className="h-3 w-3" /> Featured project
+            </span>
+            <span className="rounded-full border border-white/[0.07] bg-white/[0.035] px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">
+              {featuredProject.type}
+            </span>
+          </div>
+
+          <p className={`mb-3 bg-gradient-to-r ${featuredProject.color} bg-clip-text text-[11px] font-medium uppercase tracking-[0.16em] text-transparent`}>
+            {featuredProject.subtitle}
+          </p>
+          <h3 className="text-4xl font-semibold tracking-[-0.045em] text-white sm:text-5xl">{featuredProject.title}</h3>
+          <p className="mt-5 max-w-xl text-base leading-7 text-white/55">{featuredProject.description}</p>
+
+          <div className="mt-7 border-l border-green-300/25 pl-4">
+            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-green-200/45">My work</p>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-white/68">{featuredProject.contribution}</p>
+          </div>
+
+          <div className="mt-7 flex flex-wrap gap-2">
+            {featuredProject.tech.map((tech) => (
+              <span key={tech} className="rounded-md border border-white/[0.08] bg-black/25 px-2.5 py-1 text-[10px] text-white/55">
+                {tech}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <a
+              href={featuredProject.link}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2.5 text-xs font-medium text-white/75 transition hover:border-green-300/25 hover:bg-green-300/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-300"
+            >
+              <Github className="h-4 w-4" /> View source <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+            <span className="inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.15em] text-white/30">
+              <ScanLine className="h-3.5 w-3.5 text-green-300/60" /> Try the live preview
+            </span>
+          </div>
+        </div>
+
+        <div className="relative flex min-h-[34rem] items-center justify-center overflow-hidden border-t border-white/[0.07] bg-black/25 px-5 py-8 sm:min-h-[42rem] sm:px-10 lg:min-h-0 lg:border-l lg:border-t-0 lg:px-8 xl:px-12">
+          <div className="pointer-events-none absolute inset-x-[12%] top-[14%] h-[58%] rounded-full bg-lime-300/10 blur-3xl" />
+          <div className="pointer-events-none absolute inset-5 rounded-[1.5rem] border border-white/[0.045]" />
+          <div className="relative z-10 w-full max-w-[15.5rem] sm:max-w-[18rem] lg:max-w-[17rem] xl:max-w-[19rem]">
             <FungEyeDemo />
           </div>
         </div>
-      ),
-      customWidth: "lg:w-[38.5%]",
-    },
-    {
-      id: 1,
-      title: "Munchi",
-      subtitle: "Headless E-Commerce",
-      description:
-        "An exotic snacks e-commerce platform built with a headless WordPress backend. Features dynamic inventory management, Stripe integration, and sub-second page loads.",
-      tech: ["Next.js", "WordPress", "GraphQL", "Stripe"],
-      color: "from-green-500 to-emerald-600",
-      stats: { type: "Full-Stack" },
-    },
-    {
-      id: 2,
-      subtitle: "FiveM Server Infrastructure",
-      title: "GTA:Rewind Lead Developer",
-      description:
-        "Led FiveM Lua backend development for GTA:Rewind, building gameplay systems, server-side resources, database-backed features, and performance-focused client/server workflows for a high-concurrency roleplay environment.",
-      tech: [
-        "Lua",
-        "C#",
-        "React",
-        "TypeScript",
-        "JavaScript",
-        "HTML/CSS",
-        "jQuery",
-        "MariaDB",
-        "MongoDB",
-        "PostgreSQL",
-      ],
-      color: "from-emerald-500 to-teal-600",
-      stats: { type: "Game Dev" },
-    },
-    {
-      id: 9,
-      title: "UnleashedRP Lead Developer",
-      subtitle: "FiveM Roleplay Server",
-      description:
-        "Led full-stack development for UnleashedRP, building gameplay systems, database-backed server resources, admin tooling, and interactive NUI experiences across client and server workflows.",
-      tech: ["Svelte", "React", "TypeScript", "SQL", "Lua", "JavaScript"],
-      color: "from-rose-500 to-orange-500",
-      stats: { type: "Full-Stack" },
-    },
-    {
-      id: 3,
-      title: "Portfolio V3",
-      subtitle: "Web Portfolio",
-      description:
-        "The site you're viewing now. A showcase of modern web capabilities featuring 3D elements, glassmorphism, and smooth framer motion animations.",
-      tech: ["React", "Three.js", "Tailwind", "Vite"],
-      color: "from-teal-500 to-cyan-600",
-      stats: { type: "Front-End" },
-    },
-  ];
+      </motion.article>
 
-  return (
-    <section id="projects" className="py-4 px-4 relative">
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/4 w-[800px] h-[800px] bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-400">
-            Featured Projects
-          </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-green-400 to-emerald-400 mx-auto rounded-full mb-6" />
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            A selection of work demonstrating full-stack capabilities and
-            attention to detail.
-          </p>
-        </motion.div>
-
-        <div className="flex flex-wrap justify-center gap-8">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              onHoverStart={() => setHoveredIndex(index)}
-              onHoverEnd={() => setHoveredIndex(null)}
-              onClick={() =>
-                project.link && window.open(project.link, "_blank")
-              }
-              className={`group relative rounded-2xl bg-[#0a0a0a] border border-white/10 overflow-hidden w-full ${
-                project.customWidth || "lg:w-[30%]"
-              } ${project.link ? "cursor-pointer" : ""}`}
-            >
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-              />
-              <div
-                className={`p-8 relative z-10 h-full flex ${
-                  project.demo
-                    ? "flex-col lg:flex-row gap-8 items-center"
-                    : "flex-col"
-                }`}
-              >
-                <div
-                  className={`flex flex-col ${
-                    project.demo ? "lg:w-[55%]" : "w-full"
-                  } h-full`}
-                >
-                  <div className="mb-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div
-                        className={`p-3 rounded-xl bg-gradient-to-br ${project.color} bg-opacity-10 inline-block`}
-                      >
-                        <Layers className="w-6 h-6 text-white" />
-                      </div>
-                      <div className="flex flex-col items-end gap-2">
-                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-gray-400 border border-white/5">
-                          {project.stats.type}
-                        </span>
-                        {/* @ts-ignore */}
-                        {project.wip && (
-                          <span className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 flex items-center gap-1">
-                            <AlertTriangle className="w-3 h-3" />
-                            WIP
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <h3 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-                      {project.title}
-                      {project.link && (
-                        <Github className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
-                      )}
-                    </h3>
-
-                    <p
-                      className={`text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r ${project.color}`}
-                    >
-                      {project.subtitle}
-                    </p>
-                  </div>
-
-                  <p className="text-gray-400 text-sm leading-relaxed mb-8 flex-grow">
-                    {project.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2">
-                    {project.tech.map((t) => (
-                      <span
-                        key={t}
-                        className="px-2 py-1 rounded text-xs font-medium bg-white/5 text-gray-300 border border-white/5"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right Side: Demo Content Container */}
-                {project.demo && (
-                  <div className="lg:w-[45%] w-full aspect-[4/3] lg:aspect-square relative bg-black/50 rounded-xl overflow-hidden border border-white/5 shadow-inner flex items-center justify-center self-center lg:self-stretch">
-                    {project.demo}
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+      <div className="columns-1 gap-5 md:columns-2 xl:columns-3">
+        {projects.map((project, index) => (
+          <ProjectCard key={project.id} project={project} index={index} />
+        ))}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default Projects;

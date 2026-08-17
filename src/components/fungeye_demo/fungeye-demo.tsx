@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import home_dark from "../../assets/home-dark.png";
 import home_light from "../../assets/home-light.png";
 import camera from "../../assets/camera.png";
@@ -12,7 +12,6 @@ import settings_light from "../../assets/settings-light.png";
 import donation_dark from "../../assets/donation-dark.png";
 import donation_light from "../../assets/donation-light.png";
 
-// Make sure these images are placed in your public/assets folder
 const IMAGES = {
   home_dark: home_dark,
   home_light: home_light,
@@ -28,11 +27,12 @@ const IMAGES = {
   donation_light: donation_light,
 };
 
+type DemoScreen = "home" | "camera" | "results" | "library" | "settings" | "donation";
+
 const FungEyeDemo = () => {
-  const [screen, setScreen] = useState("home");
+  const [screen, setScreen] = useState<DemoScreen>("home");
   const [isDarkMode, setIsDarkMode] = useState(true);
 
-  // Logic to determine which static image to show
   const getActiveImage = () => {
     switch (screen) {
       case "home":
@@ -53,101 +53,123 @@ const FungEyeDemo = () => {
   };
 
   return (
-    <div className="demo-container">
-      <div className="phone-mockup">
-        {/* Main Screenshot Display */}
+    <div className="fungeye-demo">
+      <div className="fungeye-phone">
         <img
           src={getActiveImage()}
           alt={`FungEye ${screen} screen`}
           className="screen-image"
+          loading="lazy"
+          decoding="async"
+          fetchPriority="low"
         />
 
-        {/* --- NAVIGATION HOTSPOTS (Invisible Buttons) --- */}
-
-        {/* Global Dark Mode Toggle (Positioned over the sun/moon icon) */}
         {screen !== "camera" && screen !== "results" && (
-          <div
+          <button
+            type="button"
+            aria-label="Toggle FungEye color theme"
             className="hotspot theme-toggle"
             onClick={() => setIsDarkMode(!isDarkMode)}
           />
         )}
 
-        {/* Home Screen Navigation */}
         {screen === "home" && (
           <>
-            <div
+            <button
+              type="button"
+              aria-label="Start a mushroom scan"
               className="hotspot btn-start-scan"
               onClick={() => setScreen("camera")}
             />
-            <div
+            <button
+              type="button"
+              aria-label="Open mushroom collection"
               className="hotspot nav-item-left"
               onClick={() => setScreen("library")}
             />
-            <div
+            <button
+              type="button"
+              aria-label="Open data donation"
               className="hotspot nav-item-center"
               onClick={() => setScreen("donation")}
             />
-            <div
+            <button
+              type="button"
+              aria-label="Open settings"
               className="hotspot nav-item-right"
               onClick={() => setScreen("settings")}
             />
           </>
         )}
 
-        {/* Camera Screen Navigation */}
         {screen === "camera" && (
           <>
-            <div
+            <button
+              type="button"
+              aria-label="Capture mushroom image"
               className="hotspot btn-shutter"
               onClick={() => setScreen("results")}
             />
-            <div
+            <button
+              type="button"
+              aria-label="Return to FungEye home"
               className="hotspot btn-back-home"
               onClick={() => setScreen("home")}
             />
-            <div
+            <button
+              type="button"
+              aria-label="Open mushroom collection"
               className="hotspot nav-item-left"
               onClick={() => setScreen("library")}
             />
-            <div
+            <button
+              type="button"
+              aria-label="Open settings"
               className="hotspot nav-item-right"
               onClick={() => setScreen("settings")}
             />
           </>
         )}
 
-        {/* Results Screen Navigation */}
         {screen === "results" && (
           <>
-            <div
+            <button
+              type="button"
+              aria-label="Save result to collection"
               className="hotspot btn-save-collection"
               onClick={() => setScreen("library")}
             />
-            <div
+            <button
+              type="button"
+              aria-label="Close result"
               className="hotspot btn-close-results"
               onClick={() => setScreen("camera")}
             />
           </>
         )}
 
-        {/* Sub-page Back Buttons (Library, Settings, Donation) */}
         {(screen === "library" ||
           screen === "settings" ||
           screen === "donation") && (
-          <div
+          <button
+            type="button"
+            aria-label="Return to FungEye home"
             className="hotspot btn-back-arrow"
             onClick={() => setScreen("home")}
           />
         )}
 
-        {/* Library Dock Navigation */}
         {screen === "library" && (
           <>
-            <div
+            <button
+              type="button"
+              aria-label="Open FungEye camera"
               className="hotspot btn-fab-camera"
               onClick={() => setScreen("camera")}
             />
-            <div
+            <button
+              type="button"
+              aria-label="Open settings"
               className="hotspot nav-item-right"
               onClick={() => setScreen("settings")}
             />
@@ -156,133 +178,140 @@ const FungEyeDemo = () => {
       </div>
 
       <style>{`
-        .demo-container {
+        .fungeye-demo {
           display: flex;
+          width: 100%;
           justify-content: center;
-          padding: 40px 20px;
-          background: #111;
         }
 
-        .phone-mockup {
+        .fungeye-phone {
           position: relative;
-          width: 375px;
-          height: 812px;
-          border-radius: 44px;
-          border: 12px solid #222;
+          width: 100%;
+          max-width: 19rem;
+          aspect-ratio: 375 / 812;
+          border-radius: clamp(1.75rem, 11.73%, 2.75rem);
+          border: clamp(0.45rem, 3.2cqw, 0.75rem) solid #171a17;
           overflow: hidden;
           background: #000;
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          box-shadow:
+            0 2rem 5rem -2rem rgba(0, 0, 0, 0.95),
+            0 0 0 1px rgba(255, 255, 255, 0.1),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+          container-type: inline-size;
         }
 
-        .screen-image {
+        .fungeye-phone::before {
+          content: "";
+          position: absolute;
+          z-index: 30;
+          left: 50%;
+          top: 0.6%;
+          width: 28%;
+          height: 2.5%;
+          transform: translateX(-50%);
+          border-radius: 999px;
+          background: #111411;
+          pointer-events: none;
+        }
+
+        .fungeye-phone .screen-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
           display: block;
         }
 
-        /* Hotspot Base Style */
-        .hotspot {
+        .fungeye-phone .hotspot {
           position: absolute;
           cursor: pointer;
-          background: rgba(
-            255,
-            0,
-            0,
-            0
-          ); /* Change to 0.2 to see buttons for alignment */
+          border: 0;
+          padding: 0;
+          border-radius: 0.75rem;
+          background: transparent;
           z-index: 20;
         }
 
-        /* Top Bar Actions */
-        .theme-toggle {
-          top: 60px;
-          right: 25px;
-          width: 45px;
-          height: 45px;
-        }
-        .btn-back-arrow {
-          top: 45px;
-          left: 20px;
-          width: 50px;
-          height: 50px;
-        }
-        .btn-close-results {
-          top: 50px;
-          left: 20px;
-          width: 50px;
-          height: 50px;
+        .fungeye-phone .hotspot:focus-visible {
+          outline: 2px solid #86efac;
+          outline-offset: -2px;
+          background: rgba(134, 239, 172, 0.12);
         }
 
-        /* Home Specific */
-        .btn-start-scan {
-          bottom: 95px;
+        .fungeye-phone .theme-toggle {
+          top: 7.4%;
+          right: 6.7%;
+          width: 12%;
+          height: 5.55%;
+        }
+        .fungeye-phone .btn-back-arrow {
+          top: 5.55%;
+          left: 5.3%;
+          width: 13.4%;
+          height: 6.2%;
+        }
+        .fungeye-phone .btn-close-results {
+          top: 6.15%;
+          left: 5.3%;
+          width: 13.4%;
+          height: 6.2%;
+        }
+
+        .fungeye-phone .btn-start-scan {
+          bottom: 11.7%;
           left: 10%;
           width: 80%;
-          height: 55px;
+          height: 6.8%;
         }
 
-        /* Camera Specific */
-        .btn-shutter {
-          bottom: 34.5px;
+        .fungeye-phone .btn-shutter {
+          bottom: 4.25%;
           left: 50%;
           transform: translateX(-50%);
-          width: 69px;
-          height: 69px;
+          width: 18.4%;
+          aspect-ratio: 1;
           border-radius: 50%;
         }
-        .btn-back-home {
-          top: 60px;
-          left: 25px;
-          width: 45px;
-          height: 45px;
+        .fungeye-phone .btn-back-home {
+          top: 7.4%;
+          left: 6.7%;
+          width: 12%;
+          height: 5.55%;
         }
 
-        /* Results Specific */
-        .btn-save-collection {
-          bottom: 40px;
-          right: 30px;
+        .fungeye-phone .btn-save-collection {
+          bottom: 4.9%;
+          right: 8%;
           width: 55%;
-          height: 60px;
+          height: 7.4%;
         }
 
-        /* Library Specific */
-        .btn-fab-camera {
-          bottom: 45px;
+        .fungeye-phone .btn-fab-camera {
+          bottom: 5.55%;
           left: 50%;
           transform: translateX(-50%);
-          width: 75px;
-          height: 75px;
+          width: 20%;
+          aspect-ratio: 1;
           border-radius: 50%;
         }
 
-        /* Bottom Dock Icons (Global mapping) */
-        .nav-item-left {
-          bottom: 30px;
+        .fungeye-phone .nav-item-left {
+          bottom: 3.7%;
           left: 5%;
-          width: 60px;
-          height: 60px;
+          width: 16%;
+          height: 7.4%;
         }
-        .nav-item-center {
-          bottom: 30px;
+        .fungeye-phone .nav-item-center {
+          bottom: 3.7%;
           left: 50%;
           transform: translateX(-50%);
-          width: 180px;
-          height: 60px;
+          width: 48%;
+          height: 7.4%;
         }
-        .nav-item-right {
-          bottom: 30px;
+        .fungeye-phone .nav-item-right {
+          bottom: 3.7%;
           right: 5%;
-          width: 60px;
-          height: 60px;
-        }
-
-        @media (max-width: 450px) {
-          .phone-mockup {
-            width: 320px;
-            height: 690px;
-            border-width: 8px;
-          }
+          width: 16%;
+          height: 7.4%;
         }
       `}</style>
     </div>
