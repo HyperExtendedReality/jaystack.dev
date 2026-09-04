@@ -95,7 +95,12 @@ const Navigation = () => {
             if (event.key === "Enter" || event.key === " ") scrollToSection("home");
           }}
         >
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-[#c8ff4a] text-[11px] font-black tracking-[-0.08em] text-[#0b0d0c] transition-transform group-hover:rotate-6">JS</span>
+          <img
+            src={`${import.meta.env.BASE_URL}jaystack-mark.svg`}
+            alt=""
+            aria-hidden="true"
+            className="h-8 w-8 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105"
+          />
           <span className="text-sm font-semibold tracking-[-0.02em] text-[#f4f1e8]">jaystack<span className="text-white/35">.dev</span></span>
         </div>
 

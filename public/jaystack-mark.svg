@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">JayStack geometric code mark</title>
+  <defs>
+    <linearGradient id="edge" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d7ff76"/>
+      <stop offset="1" stop-color="#8fe63f"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 3 56 16.5v31L32 61 8 47.5v-31L32 3Z" fill="#0b0d0c"/>
+  <path d="M32 6.5 53 18.3v27.4L32 57.5 11 45.7V18.3L32 6.5Z" fill="none" stroke="url(#edge)" stroke-width="3"/>
+  <path d="m26.5 20-9 12 9 12M37.5 20l9 12-9 12" fill="none" stroke="#c8ff4a" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="m36 17-8 30" fill="none" stroke="#f4f1e8" stroke-width="3.5" stroke-linecap="square"/>
+  <path d="M11 18.3h7M46 45.7h7" stroke="#f4f1e8" stroke-width="2"/>
+</svg>

@@ -2,15 +2,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath, URL } from "node:url";
-import { componentTagger } from "lovable-tagger";
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   base: "/jaystack.dev/",
-  plugins: [
-    tailwindcss(),
-    react(),
-    mode === "development" && componentTagger(),
-  ].filter(Boolean),
+  plugins: [tailwindcss(), react()],
 
   resolve: {
     alias: {
@@ -22,4 +17,4 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-}));
+});
