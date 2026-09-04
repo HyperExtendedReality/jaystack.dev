@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Terminal } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 const Navigation = () => {
@@ -52,9 +52,9 @@ const Navigation = () => {
   }, []);
 
   const navItems = [
-    { id: "about", label: "About" },
-    { id: "skills", label: "Skills" },
-    { id: "projects", label: "Projects" },
+    { id: "about", label: "Approach" },
+    { id: "skills", label: "Capabilities" },
+    { id: "projects", label: "Work" },
     { id: "contact", label: "Contact" },
   ];
 
@@ -68,26 +68,26 @@ const Navigation = () => {
   };
 
   return (
-    <div className="fixed left-0 top-[env(safe-area-inset-top)] z-50 flex w-full justify-center px-3 pointer-events-none sm:px-4">
+    <div className="pointer-events-none fixed left-0 top-[env(safe-area-inset-top)] z-50 flex w-full justify-center px-3 sm:px-5">
       <motion.nav
         aria-label="Primary navigation"
         initial={{ y: -100, opacity: 0 }}
         animate={{
-          y: scrolled ? 12 : 0,
+          y: scrolled ? 14 : 0,
           opacity: 1,
           width: "100%",
-          maxWidth: scrolled ? "48rem" : "100%",
-          borderRadius: scrolled ? "28px" : "0px",
-          backgroundColor: scrolled ? "rgba(0, 0, 0, 0.82)" : "rgba(0, 0, 0, 0)",
+          maxWidth: scrolled ? "54rem" : "100%",
+          borderRadius: scrolled ? "999px" : "0px",
+          backgroundColor: scrolled ? "rgba(11, 13, 12, 0.88)" : "rgba(11, 13, 12, 0)",
           borderColor: scrolled ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0)",
           backdropFilter: scrolled ? "blur(12px)" : "blur(0px)",
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="pointer-events-auto relative flex min-h-14 items-center justify-between border border-transparent px-3 py-2 shadow-lg shadow-green-900/5 sm:px-6 sm:py-3"
+        className="pointer-events-auto relative flex min-h-16 items-center justify-between border border-transparent px-3 py-2 shadow-2xl shadow-black/10 sm:px-5"
       >
         {/* Logo */}
         <div
-          className="group flex min-h-11 items-center gap-2 rounded-full pr-2 cursor-pointer"
+          className="group flex min-h-11 cursor-pointer items-center gap-2.5 rounded-full pr-2"
           onClick={() => scrollToSection("home")}
           role="button"
           tabIndex={0}
@@ -95,12 +95,8 @@ const Navigation = () => {
             if (event.key === "Enter" || event.key === " ") scrollToSection("home");
           }}
         >
-          <div className="p-1.5 bg-green-500/10 rounded-full group-hover:bg-green-500/20 transition-colors">
-            <Terminal className="h-4 w-4 text-green-400" />
-          </div>
-          <span className="text-sm font-mono font-bold text-green-400/90 group-hover:text-green-400 transition-colors">
-            jaystack.dev
-          </span>
+          <span className="grid h-8 w-8 place-items-center rounded-full bg-[#c8ff4a] text-[11px] font-black tracking-[-0.08em] text-[#0b0d0c] transition-transform group-hover:rotate-6">JS</span>
+          <span className="text-sm font-semibold tracking-[-0.02em] text-[#f4f1e8]">jaystack<span className="text-white/35">.dev</span></span>
         </div>
 
         {/* Desktop Navigation */}
@@ -109,26 +105,29 @@ const Navigation = () => {
             <button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className="relative px-4 py-1.5 text-sm font-medium text-white/70 hover:text-white transition-colors"
+              className="relative px-3.5 py-2 text-xs font-medium text-white/55 transition-colors hover:text-white"
               aria-current={activeSection === item.id ? "page" : undefined}
             >
               {activeSection === item.id && (
                 <motion.div
                   layoutId="nav-pill"
-                  className="absolute inset-0 bg-white/10 rounded-full"
+                  className="absolute inset-0 rounded-full bg-white/[0.08]"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
               )}
               <span className="relative z-10">{item.label}</span>
             </button>
           ))}
+          <a href="#contact" className="ml-2 inline-flex items-center gap-1.5 rounded-full bg-[#c8ff4a] px-4 py-2 text-xs font-semibold text-[#0b0d0c] transition hover:bg-[#d7ff76]">
+            Let&apos;s talk <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
         </div>
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex h-11 w-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-300"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c8ff4a]"
             aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={isMenuOpen}
           >
@@ -144,7 +143,7 @@ const Navigation = () => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute left-0 right-0 top-full mt-2 overflow-hidden rounded-2xl border border-white/10 bg-black/90 p-2 shadow-2xl shadow-black/70 backdrop-blur-xl"
+              className="absolute left-0 right-0 top-full mt-2 overflow-hidden rounded-3xl border border-white/10 bg-[#111411]/95 p-2 shadow-2xl shadow-black/70 backdrop-blur-xl"
             >
               <div className="flex flex-col gap-1">
                 {navItems.map((item) => (
@@ -152,8 +151,8 @@ const Navigation = () => {
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
                     aria-current={activeSection === item.id ? "page" : undefined}
-                    className={`min-h-12 rounded-xl px-4 py-3 text-left text-sm font-medium transition-all hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-green-300 ${
-                      activeSection === item.id ? "bg-green-400/10 text-green-300" : "text-white/70"
+                    className={`min-h-12 rounded-2xl px-4 py-3 text-left text-sm font-medium transition-all hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#c8ff4a] ${
+                      activeSection === item.id ? "bg-[#c8ff4a]/10 text-[#c8ff4a]" : "text-white/70"
                     }`}
                   >
                     {item.label}

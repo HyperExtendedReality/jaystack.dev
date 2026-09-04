@@ -1,8 +1,8 @@
 # JayStack
 
-Product-focused developer working across full-stack web, AI/ML engineering, games, XR, mobile apps, and performance-minded software.
+Full-stack software engineer with a product mindset, working across web platforms, mobile apps, applied AI, games, XR, and performance-minded systems.
 
-I work across modern web applications, production AI pipelines, real-time game systems, backend architecture, mobile products, and interactive 3D experiences. My background includes model training and quantization, inference API delivery, full-stack product development, FiveM server infrastructure, React and TypeScript applications, Lua gameplay systems, database-backed tools, and performance-minded engineering across client and server environments.
+I turn product ideas into working software across modern web applications, reliable backend systems, mobile products, production AI pipelines, real-time game systems, and interactive 3D experiences. My background includes model training and quantization, inference API delivery, full-stack product development, FiveM server infrastructure, React and TypeScript applications, Lua gameplay systems, database-backed tools, and performance-minded engineering across client and server environments.
 
 ## What I Do
 

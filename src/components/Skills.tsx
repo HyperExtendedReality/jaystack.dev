@@ -1,316 +1,131 @@
 import { motion } from "motion/react";
 import type { LucideIcon } from "lucide-react";
-import { Activity, BrainCircuit, Cpu, Gamepad2, Layers3, Network, Smartphone } from "lucide-react";
+import { ArrowRight, BrainCircuit, Cpu, Gamepad2, Layers3, Smartphone } from "lucide-react";
 import type { IconType } from "react-icons";
-import {
-  SiCplusplus,
-  SiGo,
-  SiJavascript,
-  SiLua,
-  SiPython,
-  SiReact,
-  SiRust,
-  SiSharp,
-  SiTensorflow,
-  SiThreedotjs,
-  SiTypescript,
-  SiWebassembly,
-} from "react-icons/si";
+import { SiCplusplus, SiGo, SiJavascript, SiLua, SiPython, SiReact, SiRust, SiSharp, SiTensorflow, SiThreedotjs, SiTypescript, SiWebassembly } from "react-icons/si";
 
-type Specialization = {
-  code: string;
+type Capability = {
+  number: string;
   title: string;
-  eyebrow: string;
-  description: string;
-  signal: string;
-  icon: LucideIcon;
-  skills: string[];
-  desktopPosition: string;
-  accent: string;
-  iconColor: string;
-};
-
-type Tool = {
   label: string;
-  icon: IconType;
-  color: string;
+  description: string;
+  skills: string[];
+  icon: LucideIcon;
+  accent: string;
+  className: string;
 };
 
-const specializations: Specialization[] = [
+type Tool = { label: string; icon: IconType; color: string };
+
+const capabilities: Capability[] = [
   {
-    code: "01",
-    title: "Full-Stack Web",
-    eyebrow: "Product systems",
-    description: "Interfaces, APIs, and data designed as one dependable product.",
-    signal: "Interface ↔ infrastructure",
+    number: "01",
+    title: "Full-stack product engineering",
+    label: "Core practice",
+    description: "I connect the interface, API, data model, and delivery path so the product behaves like one system—not a collection of handoffs.",
+    skills: ["React / TypeScript", "APIs + services", "SQL + data", "Production delivery"],
     icon: Layers3,
-    skills: ["React / Next.js", "APIs", "Data systems"],
-    desktopPosition: "left-[4%] top-[8%] w-[29%]",
-    accent: "from-green-400/20 via-green-400/5 to-transparent",
-    iconColor: "text-green-300",
+    accent: "#c8ff4a",
+    className: "lg:col-span-7",
   },
   {
-    code: "02",
-    title: "AI / ML Systems",
-    eyebrow: "Applied intelligence",
-    description: "From model training and optimization to useful production inference.",
-    signal: "Training ↔ inference",
-    icon: BrainCircuit,
-    skills: ["Model training", "Computer vision", "Inference"],
-    desktopPosition: "right-[4%] top-[8%] w-[29%]",
-    accent: "from-cyan-400/20 via-cyan-400/5 to-transparent",
-    iconColor: "text-cyan-300",
-  },
-  {
-    code: "03",
-    title: "Game Development + XR",
-    eyebrow: "Real-time worlds",
-    description: "Gameplay, physics, spatial interfaces, and immersive 3D experiences.",
-    signal: "Simulation ↔ interaction",
-    icon: Gamepad2,
-    skills: ["Unity / Unreal", "Gameplay + physics", "WebXR / spatial"],
-    desktopPosition: "left-[3%] top-[56%] w-[30%]",
-    accent: "from-violet-400/20 via-violet-400/5 to-transparent",
-    iconColor: "text-violet-300",
-  },
-  {
-    code: "04",
-    title: "Mobile Products",
-    eyebrow: "On-device",
-    description: "Focused cross-platform apps with native and offline capabilities.",
-    signal: "Product ↔ device",
+    number: "02",
+    title: "Mobile products",
+    label: "On-device",
+    description: "Cross-platform apps that feel focused, fast, and capable—with native integrations and offline workflows when the product needs them.",
+    skills: ["React Native", "Expo", "Native APIs", "Offline-first"],
     icon: Smartphone,
-    skills: ["React Native / Expo", "Native APIs", "On-device ML"],
-    desktopPosition: "right-[3%] top-[56%] w-[30%]",
-    accent: "from-lime-400/20 via-lime-400/5 to-transparent",
-    iconColor: "text-lime-300",
+    accent: "#69d2ff",
+    className: "lg:col-span-5",
   },
   {
-    code: "05",
-    title: "Systems Engineering",
-    eyebrow: "Performance layer",
-    description: "Tooling, integrations, and low-level work for demanding software.",
-    signal: "Performance ↔ reliability",
+    number: "03",
+    title: "Applied AI",
+    label: "Intelligent systems",
+    description: "Useful model-driven features from training and optimization through inference, integration, and the final user experience.",
+    skills: ["Computer vision", "TensorFlow", "YOLO", "On-device inference"],
+    icon: BrainCircuit,
+    accent: "#ff9e80",
+    className: "lg:col-span-5",
+  },
+  {
+    number: "04",
+    title: "Game + XR engineering",
+    label: "Real-time",
+    description: "Gameplay systems, physics, spatial interfaces, and interactive 3D work where performance and feel are part of the architecture.",
+    skills: ["Unity / Unreal", "Three.js", "WebXR", "Gameplay systems"],
+    icon: Gamepad2,
+    accent: "#b8a1ff",
+    className: "lg:col-span-7",
+  },
+  {
+    number: "05",
+    title: "Systems + performance",
+    label: "Under the hood",
+    description: "Low-level tooling, integrations, profiling, and performance work for software that needs more than the happy path.",
+    skills: ["C# / C++ / Rust", "WebAssembly", "Networking", "Profiling"],
     icon: Cpu,
-    skills: ["C# / C++ / Rust", "WebAssembly", "Profiling"],
-    desktopPosition: "bottom-[3%] left-1/2 w-[29%] -translate-x-1/2",
-    accent: "from-sky-400/20 via-sky-400/5 to-transparent",
-    iconColor: "text-sky-300",
+    accent: "#ffd66b",
+    className: "lg:col-span-12",
   },
 ];
 
 const tools: Tool[] = [
-  { label: "TypeScript", icon: SiTypescript, color: "#60a5fa" },
-  { label: "JavaScript", icon: SiJavascript, color: "#facc15" },
-  { label: "Python", icon: SiPython, color: "#60a5fa" },
-  { label: "C#", icon: SiSharp, color: "#c084fc" },
-  { label: "C++", icon: SiCplusplus, color: "#38bdf8" },
-  { label: "Rust", icon: SiRust, color: "#fdba74" },
-  { label: "Go", icon: SiGo, color: "#22d3ee" },
-  { label: "Lua", icon: SiLua, color: "#818cf8" },
-  { label: "React", icon: SiReact, color: "#67e8f9" },
-  { label: "Three.js", icon: SiThreedotjs, color: "#f8fafc" },
-  { label: "TensorFlow", icon: SiTensorflow, color: "#fb923c" },
-  { label: "WebAssembly", icon: SiWebassembly, color: "#a78bfa" },
+  { label: "TypeScript", icon: SiTypescript, color: "#69d2ff" },
+  { label: "JavaScript", icon: SiJavascript, color: "#ffd66b" },
+  { label: "React", icon: SiReact, color: "#69d2ff" },
+  { label: "Python", icon: SiPython, color: "#8fc8ff" },
+  { label: "C#", icon: SiSharp, color: "#b8a1ff" },
+  { label: "C++", icon: SiCplusplus, color: "#69d2ff" },
+  { label: "Rust", icon: SiRust, color: "#ff9e80" },
+  { label: "Go", icon: SiGo, color: "#69d2ff" },
+  { label: "Lua", icon: SiLua, color: "#b8a1ff" },
+  { label: "Three.js", icon: SiThreedotjs, color: "#f4f1e8" },
+  { label: "TensorFlow", icon: SiTensorflow, color: "#ff9e80" },
+  { label: "WASM", icon: SiWebassembly, color: "#b8a1ff" },
 ];
-
-const connections = [
-  { path: "M 500 316 C 416 274, 352 184, 205 140", x: 205, y: 140 },
-  { path: "M 500 316 C 584 274, 648 184, 795 140", x: 795, y: 140 },
-  { path: "M 500 316 C 410 360, 334 438, 190 486", x: 190, y: 486 },
-  { path: "M 500 316 C 590 360, 666 438, 810 486", x: 810, y: 486 },
-  { path: "M 500 316 C 500 410, 500 486, 500 585", x: 500, y: 585 },
-];
-
-const SpecializationCard = ({ specialization, index, desktop = false }: { specialization: Specialization; index: number; desktop?: boolean }) => {
-  const Icon = specialization.icon;
-
-  return (
-    <motion.article
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.35 }}
-      transition={{ duration: 0.45, delay: index * 0.06 }}
-      className={`group z-10 overflow-hidden rounded-2xl border border-white/[0.09] bg-[#070907]/95 p-4 shadow-xl shadow-black/30 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/20 sm:p-5 ${desktop ? `absolute ${specialization.desktopPosition}` : "relative"}`}
-    >
-      <div className={`absolute inset-0 bg-gradient-to-br ${specialization.accent} opacity-70 transition-opacity group-hover:opacity-100`} />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
-      <div className="relative">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className={`font-mono text-[9px] ${specialization.iconColor}`}>{specialization.code}</span>
-            <span className="h-3 w-px bg-white/10" />
-            <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/[0.32]">{specialization.eyebrow}</span>
-          </div>
-          <span className={`rounded-xl border border-white/10 bg-black/30 p-2.5 ${specialization.iconColor}`}>
-            <Icon className="h-5 w-5" />
-          </span>
-        </div>
-        <h3 className="text-lg font-semibold text-white sm:text-xl">{specialization.title}</h3>
-        <p className="mt-2 text-sm leading-6 text-white/[0.48]">{specialization.description}</p>
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {specialization.skills.map((skill) => (
-            <span key={skill} className="rounded-md border border-white/[0.07] bg-black/30 px-2.5 py-1 text-[11px] text-white/60">
-              {skill}
-            </span>
-          ))}
-        </div>
-        <div className="mt-4 flex items-center gap-2 border-t border-white/[0.06] pt-3 font-mono text-[8px] uppercase tracking-[0.13em] text-white/25">
-          <Activity className={`h-3 w-3 ${specialization.iconColor}`} /> {specialization.signal}
-        </div>
-      </div>
-    </motion.article>
-  );
-};
-
-const CoreNode = ({ compact = false }: { compact?: boolean }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.92 }}
-    whileInView={{ opacity: 1, scale: 1 }}
-    viewport={{ once: true, amount: 0.6 }}
-    transition={{ duration: 0.5 }}
-    className={`z-20 flex items-center justify-center ${compact ? "relative mx-auto mb-8 h-44 w-44" : "absolute left-1/2 top-[47%] h-44 w-44 -translate-x-1/2 -translate-y-1/2"}`}
-  >
-    <div className="absolute -inset-8 rounded-full bg-green-400/[0.08] blur-2xl" />
-    <div className="absolute inset-0 rounded-full border border-dashed border-green-300/25 motion-safe:animate-[spin_24s_linear_infinite]" />
-    <div className="absolute inset-4 rounded-full border border-cyan-300/10 motion-safe:animate-[spin_18s_linear_infinite_reverse]" />
-    <span className="absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.8)]" />
-    <span className="absolute right-4 top-5 h-1.5 w-1.5 rounded-full bg-violet-300 shadow-[0_0_10px_rgba(196,181,253,0.75)]" />
-    <div className="relative flex h-32 w-32 flex-col items-center justify-center rounded-full border border-green-300/25 bg-black/90 text-center shadow-[0_0_55px_rgba(74,222,128,0.18)] backdrop-blur-xl">
-      <Network className="mb-3 h-6 w-6 text-green-300" />
-      <span className="text-sm font-semibold text-white">Product Engineer</span>
-      <span className="mt-1 max-w-24 font-mono text-[7px] uppercase leading-3 tracking-[0.16em] text-green-300/60">Design · build · ship</span>
-    </div>
-  </motion.div>
-);
 
 const Skills = () => (
-  <section id="skills" aria-labelledby="skills-title" className="relative overflow-hidden px-4 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
-    <div className="pointer-events-none absolute left-1/2 top-1/3 h-[42rem] w-[42rem] -translate-x-1/2 rounded-full bg-green-400/[0.035] blur-3xl" />
-    <div className="relative mx-auto max-w-7xl">
-      <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
-        className="mx-auto mb-10 max-w-3xl text-center sm:mb-12"
-      >
-        <p className="mb-3 font-mono text-xs uppercase tracking-[0.24em] text-green-400">Specialization map</p>
-        <h2 id="skills-title" className="text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl lg:text-5xl">
-          A connected engineering practice.
-        </h2>
-        <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-white/50 sm:text-lg">
-          Five disciplines working as one system—from interface and inference to simulation and infrastructure.
-        </p>
-      </motion.div>
-
-      <div className="relative hidden h-[42rem] overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[#040604] shadow-2xl shadow-black/35 lg:block">
-        <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [background-size:48px_48px]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(74,222,128,0.09),transparent_28%),radial-gradient(circle_at_10%_90%,rgba(139,92,246,0.07),transparent_30%),radial-gradient(circle_at_90%_8%,rgba(34,211,238,0.06),transparent_26%)]" />
-        <div className="absolute left-5 top-4 z-20 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-white/30">
-          <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full motion-safe:animate-ping rounded-full bg-green-300 opacity-40" /><span className="relative h-2 w-2 rounded-full bg-green-300" /></span> Capability constellation
+  <section id="skills" aria-labelledby="skills-title" className="relative overflow-hidden px-4 py-20 sm:px-8 sm:py-28 lg:px-12 lg:py-36">
+    <div className="pointer-events-none absolute right-[-10rem] top-1/4 h-[34rem] w-[34rem] rounded-full bg-[#69d2ff]/[0.045] blur-3xl" />
+    <div className="relative mx-auto max-w-[88rem]">
+      <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end lg:gap-16">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#c8ff4a]">What I bring</p>
+          <h2 id="skills-title" className="mt-4 text-4xl font-semibold leading-[0.98] tracking-[-0.055em] text-[#f4f1e8] sm:text-5xl lg:text-6xl">A full stack that goes <span className="display-serif font-normal italic text-white/38">beyond the browser.</span></h2>
         </div>
-        <div className="absolute right-5 top-4 z-20 font-mono text-[9px] uppercase tracking-[0.18em] text-white/25">05 domains · 01 practice</div>
-
-        <svg aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1000 660" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="skill-line" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.28" />
-              <stop offset="50%" stopColor="#4ade80" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.28" />
-            </linearGradient>
-            <filter id="skill-glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="2.5" result="blur" />
-              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-            </filter>
-            <radialGradient id="orbit-fade">
-              <stop offset="0%" stopColor="#86efac" stopOpacity="0.14" />
-              <stop offset="100%" stopColor="#86efac" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-          <ellipse cx="500" cy="316" rx="185" ry="132" fill="none" stroke="rgba(134,239,172,0.11)" strokeWidth="1" strokeDasharray="5 9" />
-          <ellipse cx="500" cy="316" rx="305" ry="225" fill="none" stroke="rgba(103,232,249,0.055)" strokeWidth="1" />
-          <circle cx="500" cy="316" r="230" fill="url(#orbit-fade)" opacity="0.32" />
-          {connections.map(({ path, x, y }, index) => (
-            <g key={path}>
-              <motion.path
-                d={path}
-                fill="none"
-                stroke="url(#skill-line)"
-                strokeWidth="1.35"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ duration: 0.85, delay: 0.12 + index * 0.08 }}
-              />
-              <motion.circle
-                cx={x}
-                cy={y}
-                r="4"
-                fill="#86efac"
-                filter="url(#skill-glow)"
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 0.9, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.65 + index * 0.08, duration: 0.35 }}
-              />
-              <motion.circle
-                r="2.5"
-                fill="#ffffff"
-                opacity="0.65"
-                initial={{ offsetDistance: "0%" }}
-                animate={{ offsetDistance: "100%" }}
-                transition={{ duration: 3.4 + index * 0.4, repeat: Infinity, ease: "linear", delay: index * 0.35 }}
-                style={{ offsetPath: `path('${path}')` }}
-              />
-            </g>
-          ))}
-        </svg>
-        {specializations.map((specialization, index) => (
-          <SpecializationCard key={specialization.title} specialization={specialization} index={index} desktop />
-        ))}
-        <CoreNode />
+        <p className="max-w-2xl text-base leading-7 text-white/48 sm:text-lg sm:leading-8 lg:justify-self-end">My strongest value is range with cohesion: I can build the product surface, understand the systems beneath it, and go deeper when the experience calls for AI, mobile, or real-time technology.</p>
       </div>
 
-      <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[#040604] p-4 shadow-2xl shadow-black/25 sm:p-5 lg:hidden">
-        <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:36px_36px]" />
-        <div className="relative mb-5 flex items-center justify-between gap-3 font-mono text-[8px] uppercase tracking-[0.16em] text-white/25">
-          <span className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-green-300" /> Capability constellation</span>
-          <span>05 domains</span>
-        </div>
-        <CoreNode compact />
-        <div className="absolute bottom-8 left-9 top-64 w-px bg-gradient-to-b from-green-300/45 via-cyan-300/25 to-transparent sm:left-11" />
-        <div className="relative space-y-3">
-          {specializations.map((specialization, index) => (
-            <div key={specialization.title} className="relative pl-9 sm:pl-11">
-              <span className={`absolute left-[1.05rem] top-8 h-2 w-2 -translate-x-1/2 rounded-full border border-white/20 bg-current shadow-[0_0_12px_rgba(74,222,128,0.3)] sm:left-[1.3rem] ${specialization.iconColor}`} />
-              <span className="absolute left-[1.05rem] top-[2.15rem] h-px w-5 bg-gradient-to-r from-green-300/40 to-transparent sm:left-[1.3rem] sm:w-7" />
-              <SpecializationCard specialization={specialization} index={index} />
+      <div className="mt-12 grid gap-3 lg:grid-cols-12">
+        {capabilities.map(({ number, title, label, description, skills, icon: Icon, accent, className }, index) => (
+          <motion.article key={title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.22 }} transition={{ delay: (index % 2) * 0.06 }} className={`group relative overflow-hidden rounded-[1.75rem] border border-white/[0.09] bg-[#111411]/80 p-6 transition duration-300 hover:-translate-y-1 hover:border-white/18 sm:p-8 ${className}`}>
+            <div className="absolute inset-x-0 top-0 h-px opacity-70" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
+            <div className="relative flex h-full flex-col">
+              <div className="flex items-center justify-between gap-5">
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: accent }}>/{number} · {label}</span>
+                <span className="grid h-11 w-11 place-items-center rounded-full border border-white/[0.08] bg-black/20" style={{ color: accent }}><Icon className="h-5 w-5" /></span>
+              </div>
+              <h3 className="mt-10 max-w-xl text-2xl font-semibold tracking-[-0.035em] text-white sm:text-3xl">{title}</h3>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-white/45 sm:text-base sm:leading-7">{description}</p>
+              <div className="mt-7 flex flex-wrap gap-2">
+                {skills.map((skill) => <span key={skill} className="rounded-full border border-white/[0.08] bg-black/20 px-3 py-1.5 text-[10px] text-white/50 sm:text-xs">{skill}</span>)}
+              </div>
+              {index === 0 && (
+                <div className="mt-8 grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-center gap-2 border-t border-white/[0.07] pt-6 text-center text-[9px] font-semibold uppercase tracking-[0.12em] text-white/35">
+                  <span>UI</span><ArrowRight className="h-3 w-3 text-[#c8ff4a]" /><span>API</span><ArrowRight className="h-3 w-3 text-[#c8ff4a]" /><span>Data</span><ArrowRight className="h-3 w-3 text-[#c8ff4a]" /><span>Ship</span>
+                </div>
+              )}
             </div>
-          ))}
-        </div>
+          </motion.article>
+        ))}
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.35 }}
-        className="mt-5 rounded-2xl border border-white/[0.08] bg-white/[0.025] p-4 sm:p-6"
-      >
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-green-300/75">Languages & core tools</p>
-          <span className="hidden text-xs text-white/30 sm:block">A practical, polyglot toolbelt</span>
-        </div>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+      <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} className="mt-3 rounded-[1.75rem] border border-white/[0.08] bg-white/[0.025] p-5 sm:p-7">
+        <div className="mb-5 flex flex-col justify-between gap-2 sm:flex-row sm:items-center"><p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#c8ff4a]">Working toolbelt</p><span className="text-xs text-white/28">Polyglot by problem, practical by default</span></div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
           {tools.map(({ label, icon: Icon, color }) => (
-            <motion.div
-              key={label}
-              whileHover={{ y: -3 }}
-              className="group flex min-w-0 items-center gap-2.5 rounded-xl border border-white/[0.07] bg-black/25 px-3 py-3 transition-colors hover:border-white/15 hover:bg-white/[0.04]"
-              title={label}
-            >
-              <Icon aria-hidden="true" className="h-4 w-4 shrink-0" style={{ color }} />
-              <span className="min-w-0 truncate text-[11px] text-white/[0.58] sm:text-xs">{label}</span>
-            </motion.div>
+            <div key={label} className="flex items-center gap-2.5 rounded-xl border border-white/[0.07] bg-black/20 px-3 py-3.5 transition hover:border-white/15 hover:bg-white/[0.035]"><Icon aria-hidden="true" className="h-4 w-4 shrink-0" style={{ color }} /><span className="truncate text-[11px] text-white/52 sm:text-xs">{label}</span></div>
           ))}
         </div>
       </motion.div>

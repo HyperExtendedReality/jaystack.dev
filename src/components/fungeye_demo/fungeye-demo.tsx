@@ -61,7 +61,6 @@ const FungEyeDemo = () => {
           className="screen-image"
           loading="lazy"
           decoding="async"
-          fetchPriority="low"
         />
 
         {screen !== "camera" && screen !== "results" && (

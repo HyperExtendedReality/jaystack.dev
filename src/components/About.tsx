@@ -1,79 +1,40 @@
 import { motion } from "motion/react";
-import type { LucideIcon } from "lucide-react";
-import { Gauge, Layers3, ShieldCheck } from "lucide-react";
+import { ArrowDown, Compass, Layers3, Rocket, SlidersHorizontal } from "lucide-react";
 
-const principles: Array<{ title: string; description: string; icon: LucideIcon }> = [
-  { title: "Start with the product", description: "Make the useful thing clear before adding complexity.", icon: Layers3 },
-  { title: "Engineer for reality", description: "Design around performance, reliability, and real constraints.", icon: Gauge },
-  { title: "Ship with confidence", description: "Keep systems understandable, testable, and easy to evolve.", icon: ShieldCheck },
+const process = [
+  { number: "01", title: "Frame", description: "Find the real product problem and define what success looks like.", icon: Compass },
+  { number: "02", title: "Architect", description: "Choose the smallest durable system that can grow with the idea.", icon: Layers3 },
+  { number: "03", title: "Build", description: "Move fluidly from interface to API, data, infrastructure, and device.", icon: SlidersHorizontal },
+  { number: "04", title: "Refine", description: "Profile, test, polish, and ship an experience people can trust.", icon: Rocket },
 ];
 
 const About = () => (
-  <section id="about" aria-labelledby="about-title" className="relative overflow-hidden px-4 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
-    <div className="pointer-events-none absolute left-[-8rem] top-1/3 h-80 w-80 rounded-full bg-green-400/[0.04] blur-3xl" />
-    <div className="relative mx-auto max-w-7xl">
-      <div className="grid gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:gap-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.5 }}
-        >
-          <p className="mb-3 font-mono text-xs uppercase tracking-[0.24em] text-green-400">About / approach</p>
-          <h2 id="about-title" className="max-w-3xl text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl lg:text-5xl">
-            Product thinking backed by deep implementation.
+  <section id="about" aria-labelledby="about-title" className="relative overflow-hidden px-4 py-20 sm:px-8 sm:py-28 lg:px-12 lg:py-36">
+    <div className="mx-auto max-w-[88rem]">
+      <div className="grid gap-10 border-y border-white/[0.08] py-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20 lg:py-20">
+        <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }}>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#c8ff4a]">How I think</p>
+          <div className="mt-8 flex items-center gap-3 text-xs text-white/30"><ArrowDown className="h-4 w-4 text-[#c8ff4a]" /> The shortest path from idea to value</div>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ delay: 0.08 }}>
+          <h2 id="about-title" className="max-w-5xl text-balance text-4xl font-semibold leading-[1.03] tracking-[-0.055em] text-[#f4f1e8] sm:text-5xl lg:text-7xl">
+            Broad technical range. <span className="display-serif font-normal italic text-white/38">One product mindset.</span>
           </h2>
-          <p className="mt-6 max-w-2xl text-base leading-7 text-white/[0.58] sm:text-lg sm:leading-8">
-            I build across interface, infrastructure, intelligent systems, and real-time experiences—so the final product feels coherent, not stitched together.
-          </p>
-          <p className="mt-4 max-w-xl text-sm leading-6 text-white/40 sm:text-base sm:leading-7">
-            I’m most useful on ambitious projects that need technical range, clear decisions, and a strong path from idea to production.
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-2">
-            {["Product-minded", "Performance-aware", "End-to-end ownership"].map((quality) => (
-              <span key={quality} className="rounded-full border border-white/[0.08] bg-white/[0.035] px-3.5 py-2 text-xs text-white/[0.55]">
-                {quality}
-              </span>
-            ))}
+          <div className="mt-8 grid gap-5 text-base leading-7 text-white/50 sm:grid-cols-2 sm:text-lg sm:leading-8">
+            <p>I’m a full-stack software engineer who enjoys owning the whole problem—not just the layer where it first appears.</p>
+            <p>That range lets me connect product decisions to technical ones, whether the result lives in a browser, on a phone, inside a model, or in a real-time world.</p>
           </div>
         </motion.div>
+      </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 24 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.55, delay: 0.08 }}
-          className="relative"
-        >
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-green-400/10 via-transparent to-cyan-400/[0.06] blur-2xl" />
-          <div className="relative overflow-hidden rounded-3xl border border-white/[0.09] bg-white/[0.03] p-3 backdrop-blur-sm sm:p-4">
-            <div className="flex items-center justify-between px-3 pb-3 pt-2">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-green-300/70">How I work</span>
-              <span className="h-2 w-2 rounded-full bg-green-300 shadow-[0_0_12px_rgba(134,239,172,0.65)]" />
-            </div>
-            <div className="space-y-2">
-              {principles.map(({ title, description, icon: Icon }, index) => (
-                <motion.div
-                  key={title}
-                  initial={{ opacity: 0, x: 12 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.16 + index * 0.08 }}
-                  className="group flex gap-4 rounded-2xl border border-white/[0.06] bg-black/25 p-4 transition-colors hover:border-green-300/15 hover:bg-white/[0.035] sm:p-5"
-                >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-green-300">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <h3 className="text-sm font-medium text-white sm:text-base">{title}</h3>
-                    <p className="mt-1 text-xs leading-5 text-white/40 sm:text-sm sm:leading-6">{description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
+      <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        {process.map(({ number, title, description, icon: Icon }, index) => (
+          <motion.article key={title} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ delay: index * 0.06 }} className="group rounded-[1.6rem] border border-white/[0.08] bg-white/[0.025] p-5 transition hover:-translate-y-1 hover:border-white/15 hover:bg-white/[0.04] sm:p-6">
+            <div className="flex items-center justify-between"><span className="text-[10px] font-semibold tracking-[0.18em] text-white/25">/{number}</span><Icon className="h-5 w-5 text-[#c8ff4a] transition-transform group-hover:rotate-6" /></div>
+            <h3 className="mt-12 text-xl font-semibold tracking-[-0.025em] text-white">{title}</h3>
+            <p className="mt-3 text-sm leading-6 text-white/42">{description}</p>
+          </motion.article>
+        ))}
       </div>
     </div>
   </section>
