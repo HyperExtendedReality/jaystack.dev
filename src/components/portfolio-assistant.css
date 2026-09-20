@@ -1,0 +1,60 @@
+.pip-launcher { position: fixed; z-index: 45; right: 26px; bottom: 22px; display: flex; align-items: center; gap: 13px; background: transparent; border: 0; color: #eef1e7; padding: 5px; filter: drop-shadow(0 8px 15px #0008); }
+.pip-bubble { display: flex; gap: 6px; align-items: center; position: relative; background: #222d23; border: 1px solid #c8ff4a40; border-radius: 14px 14px 3px 14px; padding: 14px 16px; font-size: 12px; }
+.pip-bubble strong { color: #c8ff4a; font-weight: 500; }
+.pip-robot { position: relative; display: inline-block; width: 72px; height: 100px; flex-shrink: 0; perspective: 250px; animation: pip-hover 4s ease-in-out infinite; }
+.pip-head { position: absolute; top: 15px; left: 7px; width: 58px; height: 42px; border-radius: 13px; background: linear-gradient(135deg, #f1f4e5, #8d9b80); border: 1px solid #efffd7; box-shadow: inset -5px -4px 0 #60705260, 3px 4px 0 #101910; transform: rotateY(var(--look-x, -8deg)) rotateX(var(--look-y, 0deg)); z-index: 3; }
+.pip-face { position: absolute; inset: 7px 8px 9px; background: #101b18; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; box-shadow: inset 0 2px 5px #0008; }
+.pip-face i { height: 10px; width: 5px; border-radius: 3px; background: #c8ff4a; box-shadow: 0 0 8px #c8ff4a70; animation: pip-blink 5s infinite; }
+.pip-face b { position: absolute; width: 8px; height: 3px; background: #b5a1ff; border-radius: 0 0 4px 4px; bottom: 4px; }
+.pip-antenna { position: absolute; height: 13px; width: 3px; background: #9cac8f; left: 34px; top: 4px; }
+.pip-antenna:before { content: ''; position: absolute; width: 7px; height: 7px; left: -2px; top: -3px; border-radius: 50%; background: #c8ff4a; box-shadow: 0 0 12px #c8ff4a80; }
+.pip-body { position: absolute; left: 17px; top: 57px; width: 38px; height: 29px; background: linear-gradient(135deg, #d9e2cd, #8f9e80); border-radius: 6px 6px 12px 12px; box-shadow: inset -4px -4px 0 #5e705750; display: grid; place-items: center; color: #23301e; }
+.pip-arm { position: absolute; width: 10px; height: 26px; border-radius: 6px; background: #a5b69a; top: 58px; transform-origin: 50% 5px; }
+.pip-left { left: 4px; transform: rotate(18deg); }
+.pip-right { right: 3px; background: #c8ff4a; transform: rotate(-135deg); animation: pip-wave 4s ease-in-out infinite; }
+.pip-foot { position: absolute; bottom: 5px; width: 15px; height: 10px; border-radius: 4px; background: #839876; box-shadow: inset 0 -3px 0 #31432c; }
+.pip-foot-left { left: 18px; } .pip-foot-right { right: 18px; }
+.pip-launcher:hover .pip-bubble { border-color: #c8ff4a; }
+.pip-chat { position: fixed; inset: auto 24px 24px auto; margin: 0; padding: 0; width: min(440px, calc(100vw - 32px)); max-width: none; height: min(690px, calc(100dvh - 48px)); max-height: none; border: 1px solid #6a7d5455; border-radius: 22px; background: #131b15; color: #e8ecdf; box-shadow: 0 24px 100px #0009; overflow: hidden; font-family: Arial, Helvetica, sans-serif; }
+.pip-chat[open] { display: flex; flex-direction: column; }
+.pip-chat::backdrop { background: #030a0555; backdrop-filter: blur(3px); }
+.pip-header { display: flex; align-items: center; gap: 14px; padding: 17px 20px; border-bottom: 1px solid #ffffff14; background: #1b271d; }
+.pip-header .pip-robot { width: 52px; height: 61px; transform: scale(.65); transform-origin: left center; margin-right: -15px; animation: none; }
+.portfolio .pip-header h2 { font-size: 19px; letter-spacing: -.6px; font-weight: 500; }
+.pip-header p { font-size: 10px; color: #abb8a0; margin-top: 6px; line-height: 1.5; }
+.pip-header p span { color: #c8ff4a; }
+.pip-header > button { margin-left: auto; display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid #ffffff20; border-radius: 50%; flex-shrink: 0; }
+.pip-messages { min-height: 70px; flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 23px 20px 10px; scrollbar-width: thin; scrollbar-color: #485d3a transparent; }
+.pip-message { margin-bottom: 18px; max-width: 94%; }
+.pip-message-author { font: 9px monospace; letter-spacing: 1px; color: #91a67e; }
+.pip-message p { font-size: 13px; line-height: 1.75; margin-top: 7px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.pip-user { margin-left: auto; background: #c8ff4a14; border: 1px solid #c8ff4a25; border-radius: 14px 14px 2px 14px; padding: 12px 14px; }
+.pip-user p { margin-top: 4px; }
+.pip-sources { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+.pip-sources a { display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; font-size: 10px; border: 1px solid #c8ff4a30; border-radius: 5px; color: #c8ff4a; }
+.pip-thinking { display: flex; align-items: center; gap: 5px; color: #abb99e; font-size: 11px; padding-bottom: 18px; }
+.pip-thinking span { width: 4px; height: 4px; background: #c8ff4a; border-radius: 50%; animation: pip-blink 1s infinite; }
+.pip-thinking span:last-of-type { margin-right: 7px; }
+.pip-error { margin: 0 20px 10px; padding: 10px; border-radius: 6px; color: #f3dba5; background: #f3dba510; font-size: 11px; line-height: 1.5; }
+.pip-prompts { padding: 12px 20px 14px; border-top: 1px solid #ffffff10; }
+.pip-prompts > span { color: #809574; font: 8px monospace; letter-spacing: 1px; }
+.pip-prompts > div { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+.pip-prompts button { font-size: 10px; padding: 8px 10px; border: 1px solid #ffffff20; border-radius: 20px; text-align: left; }
+.pip-prompts button:hover { color: #c8ff4a; border-color: #c8ff4a70; }
+.pip-form { margin: 0 20px; display: flex; align-items: center; gap: 10px; border: 1px solid #ffffff25; border-radius: 12px; padding: 7px; background: #0b120d; }
+.pip-form:focus-within { border-color: #c8ff4a90; }
+.pip-form input { width: 100%; min-width: 0; background: transparent; outline: none; border: 0; font-size: 13px; padding: 5px 7px; }
+.pip-form input::placeholder { color: #85957a; }
+.pip-form button { width: 36px; height: 36px; flex-shrink: 0; display: grid; place-items: center; border-radius: 8px; background: #c8ff4a; color: #14200d; }
+.pip-chat button:disabled { opacity: .4; cursor: default; }
+.pip-footer { padding: 12px 20px 16px; display: flex; justify-content: space-between; gap: 16px; font-size: 9px; line-height: 1.5; color: #87997c; }
+.pip-footer > span { max-width: 235px; } .pip-footer a { flex-shrink: 0; color: #c8ff4a; }
+.pip-chat :focus-visible { outline: 2px solid #c8ff4a; outline-offset: 3px; }
+.pip-chat input:focus-visible { outline: none; }
+.is-thinking .pip-antenna:before { animation: pip-blink .8s infinite; }
+@keyframes pip-hover { 50% { translate: 0 -5px; } }
+@keyframes pip-wave { 0%, 70%, 100% { rotate: 0deg; } 78%, 90% { rotate: 22deg; } 84%, 96% { rotate: -12deg; } }
+@keyframes pip-blink { 0%, 93%, 100% { scale: 1 1; } 96% { scale: 1 .2; } }
+@media (max-width: 760px) { .pip-launcher { right: 14px; bottom: 12px; gap: 5px; } .pip-launcher .pip-robot { scale: .8; transform-origin: right bottom; margin-left: -10px; } .pip-bubble { padding: 10px 12px; font-size: 11px; } .pip-chat { right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); width: calc(100vw - 24px); height: min(680px, calc(100dvh - 24px)); border-radius: 16px; } .pip-header { padding: 12px 16px; } .portfolio .pip-header h2 { font-size: 18px; } .pip-form input { font-size: 16px; } }
+@media (prefers-reduced-motion: reduce) { .pip-robot, .pip-arm, .pip-face i, .pip-thinking span, .pip-antenna:before { animation: none !important; } .pip-head { transform: none; } }
+

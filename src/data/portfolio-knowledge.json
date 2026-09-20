@@ -1,0 +1,60 @@
+[
+  {
+    "id": "about",
+    "title": "About Jay",
+    "url": "#about",
+    "question": "What makes Jay a strong hire?",
+    "facts": "Jay is a full-stack software engineer based in Orlando, Florida, with a product mindset. He connects interfaces to backends and works across web platforms, mobile AI, multiplayer worlds, and developer tools. His approach is Understand, Architect, Build, Refine. He values ownership, problem solving, system design, performance, and practical product development."
+  },
+  {
+    "id": "stack",
+    "title": "Engineering toolkit",
+    "url": "#skills",
+    "question": "What is his tech stack?",
+    "facts": "Full-stack: React, TypeScript, JavaScript, Svelte, Node.js, PostgreSQL, C#/.NET. Mobile and applied AI: React Native, Python, TensorFlow, YOLO, on-device inference. Games and immersive work: Three.js, React Three Fiber, C++, Lua, WebAssembly, VR/XR. Systems and tools: Rust, C++, SpacetimeDB, .NET, Git, WebView2. His README also lists Go, MariaDB and MongoDB.",
+    "constraints": "Do not assign years of experience or expertise levels to individual technologies."
+  },
+  {
+    "id": "fungeye",
+    "title": "FungEye",
+    "url": "https://github.com/HyperExtendedReality/FungEye",
+    "question": "Tell me about his AI work.",
+    "facts": "FungEye is an offline mushroom identification mobile app with optimized computer vision. Jay built it from the interface to on-device inference using React Native, TensorFlow and YOLO. The portfolio includes an interactive sample-screen demo, not live camera inference. His public profile also describes model training, fine-tuning, quantization and inference API delivery. No accuracy, user-count, speed or business-impact metrics are provided."
+  },
+  {
+    "id": "infiniv",
+    "title": "Infiniv",
+    "url": "https://github.com/HyperExtendedReality/infiniv/tree/master",
+    "question": "What backend systems has he built?",
+    "facts": "Infiniv explores infrastructure behind multiplayer worlds using C++, Rust and SpacetimeDB. It is explicitly in development. The portfolio describes server architecture, gameplay systems and interfaces for multiplayer communities; it provides no scale, uptime or benchmark figures."
+  },
+  {
+    "id": "physics",
+    "title": "r3f-jolt",
+    "url": "https://github.com/HyperExtendedReality/r3f-jolt",
+    "question": "What about 3D and XR?",
+    "facts": "r3f-jolt is an open-source React Three Fiber physics library using React, Three.js and WebAssembly. The portfolio marks it in development. Jay lists VR/XR, real-time worlds and interactive 3D among his capabilities. The portfolio does not name a released headset application or specific commercial AR/VR project."
+  },
+  {
+    "id": "codewalker",
+    "title": "CodeWalker",
+    "url": "https://github.com/HyperExtendedReality/CodeWalker",
+    "question": "Does he build developer tools?",
+    "facts": "CodeWalker is open-source desktop game-world tooling. Jay's portfolio highlights modern tooling with C#, .NET 9 and DirectXTexNet.",
+    "constraints": "Do not claim he originated the upstream CodeWalker project or authored every part of it."
+  },
+  {
+    "id": "multiplayer",
+    "title": "Multiplayer projects",
+    "url": "#projects",
+    "question": "Has he led projects?",
+    "facts": "Jay is listed as lead developer for GTA:Rewind, using Lua, C#, React and PostgreSQL, and UnleashedRP, using Svelte, TypeScript, SQL and Lua. The work covers FiveM resources, NUI interfaces, gameplay systems, database-backed features and server infrastructure. No team sizes, employment dates or user counts are supplied."
+  },
+  {
+    "id": "contact",
+    "title": "Contact Jay",
+    "url": "#contact",
+    "question": "Is he available? How do I reach him?",
+    "facts": "The portfolio says Jay is open to full-stack opportunities. Email: jaystack.dev@gmail.com. GitHub: https://github.com/HyperExtendedReality. LinkedIn: https://linkedin.com/in/jb-hyperxr/. Location: Orlando, Florida. Exact start date, salary expectations, work authorization, remote/relocation preferences, degree, certifications and total years of experience are not supplied; ask Jay directly. The assistant cannot schedule interviews, accept offers or send messages on his behalf."
+  }
+]

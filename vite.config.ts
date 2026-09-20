@@ -16,5 +16,7 @@ export default defineConfig({
   server: {
     host: "::",
     port: 8080,
+    proxy: { '/api/chat': 'http://127.0.0.1:8787' },
   },
 });
+

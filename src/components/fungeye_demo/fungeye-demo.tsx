@@ -1,16 +1,16 @@
 import { useState } from "react";
-import home_dark from "../../assets/home-dark.png";
-import home_light from "../../assets/home-light.png";
-import camera from "../../assets/camera.png";
-import results from "../../assets/results.png";
-import library_dark from "../../assets/library-dark.png";
-import library_light from "../../assets/library-light.png";
-import afterscan_dark from "../../assets/afterscan-dark.png";
-import afterscan_light from "../../assets/afterscan-light.png";
-import settings_dark from "../../assets/settings-dark.png";
-import settings_light from "../../assets/settings-light.png";
-import donation_dark from "../../assets/donation-dark.png";
-import donation_light from "../../assets/donation-light.png";
+import home_dark from "../../assets/home-dark.webp";
+import home_light from "../../assets/home-light.webp";
+import camera from "../../assets/camera.webp";
+import results from "../../assets/results.webp";
+import library_dark from "../../assets/library-dark.webp";
+import library_light from "../../assets/library-light.webp";
+import afterscan_dark from "../../assets/afterscan-dark.webp";
+import afterscan_light from "../../assets/afterscan-light.webp";
+import settings_dark from "../../assets/settings-dark.webp";
+import settings_light from "../../assets/settings-light.webp";
+import donation_dark from "../../assets/donation-dark.webp";
+import donation_light from "../../assets/donation-light.webp";
 
 const IMAGES = {
   home_dark: home_dark,

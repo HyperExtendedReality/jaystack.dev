@@ -1,34 +1,51 @@
-
+import { useEffect, useRef, useState } from "react";
+import { MotionConfig, useReducedMotion } from "motion/react";
+import PortfolioAssistant from "@/components/PortfolioAssistant";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Contact from "@/components/Contact";
 import Navigation from "@/components/Navigation";
-
-const Index = () => {
+import "./portfolio.css";
+export default function Index() {
+  const [chatOpen, setChatOpen] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+  useEffect(() => {
+    if (reduced || !root.current) return;
+    const animations: Animation[] = [];
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        animations.push(entry.target.animate(
+          [{ opacity: 0, transform: "translateY(28px)" }, { opacity: 1, transform: "translateY(0)" }],
+          { duration: 750, easing: "cubic-bezier(.22,1,.36,1)", fill: "backwards" },
+        ));
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12 });
+    root.current.querySelectorAll(".section-kicker, .section-heading, .about-art, .process-strip > div, .skills-layout > div:first-child, .capability")
+      .forEach((element) => observer.observe(element));
+    return () => { observer.disconnect(); animations.forEach((animation) => animation.cancel()); };
+  }, [reduced]);
   return (
-    <div className="site-grid relative min-h-screen overflow-x-hidden bg-[#0b0d0c] text-[#f4f1e8]">
-      <a
-        href="#main-content"
-        className="fixed left-4 top-3 z-[100] -translate-y-20 rounded-full bg-[#c8ff4a] px-4 py-2 text-sm font-semibold text-[#0b0d0c] transition-transform focus:translate-y-0"
-      >
+    <MotionConfig reducedMotion="user">
+    <div className="portfolio" ref={root}>
+      <a href="#main-content" className="skip-link">
         Skip to content
       </a>
-      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_75%_12%,rgba(200,255,74,0.09),transparent_24%),radial-gradient(circle_at_8%_50%,rgba(105,210,255,0.055),transparent_28%)]" />
-      <div className="page-grain pointer-events-none fixed inset-0 z-0 opacity-30" />
-      <div className="relative z-10">
-        <Navigation />
-        <main id="main-content">
-          <Hero />
-          <About />
-          <Skills />
-          <Projects />
-          <Contact />
-        </main>
-      </div>
+      <Navigation />
+      <main id="main-content">
+        <Hero onAsk={() => setChatOpen(true)} />
+        <Projects />
+        <About />
+        <Skills />
+        <Contact />
+      </main>
+      <PortfolioAssistant open={chatOpen} onOpenChange={setChatOpen} />
     </div>
+    </MotionConfig>
   );
-};
+}
 
-export default Index;
