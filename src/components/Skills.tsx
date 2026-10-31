@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, Minus, Plus } from "lucide-react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { motion, type MotionStyle } from "motion/react";
+import { ArrowUpRight, Cpu, Gamepad2, Layers, Smartphone } from "lucide-react";
+import { PAN_QUERY, useMediaQuery, useScrollVar } from "@/hooks/use-scroll-var";
+const icons = [Layers, Smartphone, Gamepad2, Cpu];
 const capabilities = [
   {
     title: "Full-stack engineering",
@@ -52,74 +54,64 @@ const capabilities = [
   },
 ];
 export default function Skills() {
-  const [active, setActive] = useState<number | null>(0);
-  const reduced = useReducedMotion();
+  const section = useRef<HTMLElement>(null);
+  const rail = useRef<HTMLDivElement>(null);
+  const progress = useScrollVar(section, ["start start", "end end"]);
+  const panning = useMediaQuery(PAN_QUERY);
+  const [travel, setTravel] = useState(0);
+  useLayoutEffect(() => {
+    const element = rail.current;
+    if (!panning || !element) return setTravel(0);
+    const measure = () => setTravel(Math.max(0, element.offsetWidth - (element.parentElement?.clientWidth ?? 0)));
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [panning]);
   return (
-    <section
+    <motion.section
+      ref={section}
       id="skills"
-      className="skills-section section-shell"
+      className="skills-section"
       aria-labelledby="skills-title"
+      style={{ "--p": progress, "--travel": `${travel}px`, height: panning ? `calc(100vh + ${travel}px)` : undefined } as MotionStyle}
     >
-      <div className="section-kicker mono">
-        <span>
-          <i /> MY TOOLKIT
-        </span>
-      </div>
-      <div className="skills-layout">
-        <div>
-          <h2 id="skills-title">
-            Different layers.
-            <br />
-            <em>Same obsession.</em>
-          </h2>
-          <p>
-            Whatever the medium, the goal stays the same:
-            <br />
-            make something that works beautifully.
-          </p>
-          <ArrowUpRight className="skills-arrow" strokeWidth={0.7} />
-        </div>
-        <div className="capability-list">
-          {capabilities.map((item, index) => (
-            <div
-              key={item.title}
-              className={`capability ${active === index ? "is-open" : ""}`}
-            >
-              <h3>
-                <button
-                  aria-expanded={active === index}
-                  aria-controls={`capability-${index}`}
-                  onClick={() => setActive(active === index ? null : index)}
-                >
-                  {item.title}
-                  {active === index ? <Minus size={19} /> : <Plus size={19} />}
-                </button>
-              </h3>
-              <AnimatePresence initial={false}>
-                {active === index && (
-                  <motion.div
-                    id={`capability-${index}`}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: reduced ? 0 : 0.3 }}
-                  >
-                    <div className="capability-body">
-                      <span className="mono eyebrow">{item.label}</span>
-                      <p>{item.description}</p>
-                      <div className="tech-tags">
-                        {item.tools.map((tool) => (
-                          <span key={tool}>{tool}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+      <div className="skills-stage">
+        <div className="skills-rail" ref={rail}>
+          <div className="skills-intro">
+            <h2 id="skills-title">
+              Different layers.
+              <br />
+              <em>Same obsession.</em>
+            </h2>
+            <p>
+              Whatever the medium, the goal stays the same: make something that
+              works beautifully.
+            </p>
+          </div>
+          {capabilities.map((item, index) => {
+            const Icon = icons[index];
+            return (
+              <article key={item.title} className="capability-card" style={{ "--i": index + 1 } as CSSProperties}>
+                <Icon className="capability-icon" size={30} strokeWidth={1.4} aria-hidden="true" />
+                <span className="mono eyebrow">{item.label}</span>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+                <div className="tech-tags">
+                  {item.tools.map((tool) => (
+                    <span key={tool}>{tool}</span>
+                  ))}
+                </div>
+              </article>
+            );
+          })}
+          <div className="skills-outro" style={{ "--i": capabilities.length + 1 } as CSSProperties}>
+            <p>Pick a layer. <em>I’ll connect the rest.</em></p>
+            <a className="text-link" href="#contact">
+              Let’s talk <ArrowUpRight size={17} />
+            </a>
+          </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

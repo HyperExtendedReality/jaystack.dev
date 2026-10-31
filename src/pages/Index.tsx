@@ -25,7 +25,7 @@ export default function Index() {
         observer.unobserve(entry.target);
       });
     }, { threshold: 0.12 });
-    root.current.querySelectorAll(".section-kicker, .section-heading, .about-art, .process-strip > div, .skills-layout > div:first-child, .capability")
+    root.current.querySelectorAll(".section-kicker, .section-heading, .about-art, .process-strip > div")
       .forEach((element) => observer.observe(element));
     return () => { observer.disconnect(); animations.forEach((animation) => animation.cancel()); };
   }, [reduced]);
@@ -36,7 +36,7 @@ export default function Index() {
         Skip to content
       </a>
       <Navigation />
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1}>
         <Hero onAsk={() => setChatOpen(true)} />
         <Projects />
         <About />

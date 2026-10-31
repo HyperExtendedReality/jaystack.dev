@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 const links = [
   { id: "projects", label: "Work" },
@@ -8,9 +8,17 @@ const links = [
 export default function Navigation() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
+  const menuToggle = useRef<HTMLButtonElement>(null);
+  const mobileNav = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (open) mobileNav.current?.querySelector("a")?.focus();
+  }, [open]);
   useEffect(() => {
     const close = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape" && open) {
+        setOpen(false);
+        menuToggle.current?.focus();
+      }
     };
     const resize = () => {
       if (window.innerWidth > 760) setOpen(false);
@@ -32,7 +40,7 @@ export default function Navigation() {
       window.removeEventListener("keydown", close);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [open]);
   return (
     <header className="studio-header">
       <a href="#home" className="wordmark" aria-label="Jaystack home">
@@ -60,6 +68,7 @@ export default function Navigation() {
         Let’s talk <ArrowUpRight size={17} />
       </a>
       <button
+        ref={menuToggle}
         className="mobile-toggle"
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
@@ -70,13 +79,19 @@ export default function Navigation() {
       </button>
       {open && (
         <nav
+          ref={mobileNav}
           id="mobile-nav"
           className="mobile-nav"
           aria-label="Mobile navigation"
         >
           {[...links, { id: "contact", label: "Let’s talk" }].map(
             ({ id, label }) => (
-              <a key={id} href={`#${id}`} onClick={() => setOpen(false)}>
+              <a key={id} href={`#${id}`} aria-current={active === id ? "location" : undefined} onClick={() => {
+                setOpen(false);
+                const section = document.getElementById(id);
+                section?.setAttribute("tabindex", "-1");
+                section?.focus({ preventScroll: true });
+              }}>
                 {label}
                 <ArrowUpRight />
               </a>

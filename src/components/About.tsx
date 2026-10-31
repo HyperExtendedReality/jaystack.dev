@@ -1,18 +1,19 @@
-import { motion, useReducedMotion } from "motion/react";
+import { useRef } from "react";
+import { motion, useReducedMotion, type MotionStyle } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
+import { useScrollVar } from "@/hooks/use-scroll-var";
 export default function About() {
   const reduced = useReducedMotion();
+  const section = useRef<HTMLElement>(null);
+  const progress = useScrollVar(section, ["start end", "center center"]);
   return (
-    <section
+    <motion.section
+      ref={section}
       id="about"
       className="about-section section-shell"
       aria-labelledby="about-title"
+      style={{ "--p": progress } as MotionStyle}
     >
-      <div className="section-kicker mono">
-        <span>
-          <i /> THE PERSON BEHIND THE PIXELS
-        </span>
-      </div>
       <div className="about-layout">
         <div className="about-art" aria-hidden="true">
           <div className="about-orbit orbit-one" />
@@ -26,14 +27,14 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <h2 id="about-title">
+          <h2 id="about-title" className="about-reveal">
             Engineer by trade.
             <br />
             <em>Builder by nature.</em>
           </h2>
           <p className="about-lead">
-            I’m Jay, a full-stack software engineer with a product mindset and a
-            soft spot for the unexpected.
+            I’m Jay, a software engineer who works across the full web stack and
+            game development, with a product mindset and a soft spot for the unexpected.
           </p>
           <p>
             I like connecting things: elegant interfaces to reliable backends,
@@ -67,6 +68,6 @@ export default function About() {
           </div>
         ))}
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, Github, X, ArrowRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionStyle, type MotionValue } from "motion/react";
+import { ArrowUpRight, Github, X, ArrowRight, Check } from "lucide-react";
+import { PIN_QUERY, useMediaQuery, useScrollVar } from "@/hooks/use-scroll-var";
 import FungEyeDemo from "./fungeye_demo/fungeye-demo";
 import phoneHome from "../assets/home-dark.webp";
 import phoneResults from "../assets/results.webp";
@@ -34,9 +35,16 @@ const work = [
     href: "https://github.com/HyperExtendedReality/CodeWalker",
   },
 ];
+const phases = ["SCAFFOLDING", "WIRING", "POLISHING"];
 export default function Projects() {
   const [demo, setDemo] = useState(false);
+  const demoTrigger = useRef<HTMLButtonElement>(null);
   const reducedMotion = useReducedMotion();
+  const featured = useRef<HTMLElement>(null);
+  const featuredProgress = useScrollVar(featured, ["start end", "end start"]);
+  const assembly = useRef<HTMLDivElement>(null);
+  const pinned = useMediaQuery(PIN_QUERY);
+  const { scrollYProgress: assemblyProgress } = useScroll({ target: assembly, offset: ["start start", "end end"] });
   return (
     <section
       id="projects"
@@ -50,19 +58,18 @@ export default function Projects() {
       </div>
       <div className="section-heading">
         <h2 id="work-title">
-          Less talk.
+          A few things
           <br />
-          <em>More shipped.</em>
+          <em>I’ve built.</em>
         </h2>
         <p>
-          A curious mind, a versatile toolkit.
-          <br />
-          Real projects across the web, mobile,
-          <br />
-          and the worlds in between.
+          From on-device intelligence to multiplayer infrastructure.
+          Explore the demos, dig into the code, and see how the pieces connect.
         </p>
       </div>
       <motion.article
+        ref={featured}
+        style={{ "--p": featuredProgress } as MotionStyle}
         className="featured-work"
         initial={{ opacity: 0, y: reducedMotion ? 0 : 35 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -80,8 +87,8 @@ export default function Projects() {
               FungEye<span>✳</span>
             </h3>
             <p>
-              A little curiosity.
-              <br />A whole new way to see nature.
+              Computer vision.
+              <br />Made for the outdoors.
             </p>
             <div className="project-description">
               An offline mushroom identifier that puts optimized computer vision
@@ -94,7 +101,7 @@ export default function Projects() {
               <span>YOLO</span>
             </div>
             <div className="featured-actions">
-              <button className="lime-button" onClick={() => setDemo(true)}>
+              <button ref={demoTrigger} className="lime-button" onClick={() => setDemo(true)}>
                 Try the interactive demo <ArrowUpRight size={17} />
               </button>
               <a
@@ -103,7 +110,7 @@ export default function Projects() {
                 rel="noreferrer"
                 aria-label="View FungEye source on GitHub"
               >
-                <Github size={21} />
+                <Github size={18} /><span>Source code</span>
               </a>
             </div>
           </div>
@@ -139,74 +146,23 @@ export default function Projects() {
           </span>
         </div>
       </motion.article>
-      <div className="work-grid">
-        {work.map((project, index) => (
-          <motion.article
-            key={project.title}
-            className={`work-card work-${project.art}`}
-            initial={{ opacity: 0, y: reducedMotion ? 0 : 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.12 }}
-            transition={{ duration: 0.6, delay: (index % 2) * 0.08 }}
-          >
-            <a
-              className="project-art-link"
-              href={project.href}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`View ${project.title} source on GitHub`}
-            >
-              <div className={`project-visual visual-${project.art}`}>
-                <span className="project-status mono">{project.status}</span>
-                {project.art === "infiniv" ? (
-                  <div className="infinity-art" aria-hidden="true">
-                    ∞<span>CONNECTED BY POSSIBILITY</span>
-                  </div>
-                ) : project.art === "physics" ? (
-                  <div className="physics-art" aria-hidden="true">
-                    <span className="physics-floor" />
-                    <i className="ball ball-one" />
-                    <i className="ball ball-two" />
-                    <i className="ball ball-three" />
-                    <i className="physics-cube" />
-                    <span className="physics-label mono">
-                      GRAVITY IS JUST THE BEGINNING.
-                    </span>
-                  </div>
-                ) : (
-                  <div className="world-art" aria-hidden="true">
-                    {Array.from({ length: 18 }, (_, i) => (
-                      <i
-                        key={i}
-                        style={{ height: `${30 + ((i * 37) % 95)}px` }}
-                      />
-                    ))}
-                    <span className="world-label mono">
-                      BUILD YOUR OWN WORLD.
-                    </span>
-                  </div>
-                )}
-                <span className="project-open">
-                  <ArrowUpRight size={21} />
-                </span>
-              </div>
-            </a>
-            <div className="project-meta">
-              <div>
-                <span className="mono eyebrow">{project.category}</span>
-                <h3>{project.title}</h3>
-                <p>{project.detail}</p>
-              </div>
-              <span className="mono project-tech">{project.tech}</span>
-            </div>
-          </motion.article>
-        ))}
-        <motion.article
-          className="platform-card"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
+      <div className="assembly" ref={assembly}>
+        <div className="assembly-stage">
+          <h3 className="assembly-title">Open source, <em>on the workbench.</em></h3>
+          <div className="work-grid">
+            {work.map((project, index) => (
+              <BuildCard key={project.title} project={project} index={index} pinned={pinned} section={assemblyProgress} />
+            ))}
+          </div>
+        </div>
+      </div>
+      <motion.article
+        className="platform-card"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+      >
+        <div>
           <span className="mono eyebrow">
             MULTIPLAYER EXPERIENCES
           </span>
@@ -219,6 +175,8 @@ export default function Projects() {
             Server architecture, gameplay systems, and the interfaces that bring
             communities together.
           </p>
+        </div>
+        <div>
           <div className="platform-row">
             <div>
               <h4>GTA:Rewind</h4>
@@ -234,29 +192,111 @@ export default function Projects() {
           <a className="text-link" href="#contact">
             Let’s talk about the details <ArrowRight size={16} />
           </a>
-        </motion.article>
-      </div>
-      {demo && (
-        <div
-          className="demo-backdrop"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setDemo(false);
-          }}
-        >
-          <DemoDialog onClose={() => setDemo(false)} />
         </div>
+      </motion.article>
+      {demo && (
+        <DemoDialog onClose={() => setDemo(false)} triggerRef={demoTrigger} />
       )}
     </section>
   );
 }
 
-function DemoDialog({ onClose }: { onClose: () => void }) {
+type Project = (typeof work)[number];
+function BuildCard({ project, index, pinned, section }: { project: Project; index: number; pinned: boolean; section: MotionValue<number> }) {
+  const card = useRef<HTMLElement>(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress: own } = useScroll({ target: card, offset: ["start 0.95", "start 0.4"] });
+  // Pinned: cards bolt together one after another inside the held frame.
+  const start = 0.06 + index * 0.17;
+  const staged = useTransform(section, [start, start + 0.42], [0, 1]);
+  const assembled = pinned ? staged : own;
+  const amount = useTransform(assembled, (v) => v.toFixed(4));
+  const percent = useTransform(assembled, (v) => `${Math.round(v * 100)}%`);
+  const phaseOf = (v: number) => (v > 0.995 ? 3 : Math.min(2, Math.floor(v * 3)));
+  const [phase, setPhase] = useState(() => phaseOf(assembled.get()));
+  useMotionValueEvent(assembled, "change", (v) => setPhase(phaseOf(v)));
+  const done = reduced || phase === 3;
+  return (
+    <motion.article ref={card} className={`work-card build-card work-${project.art}`} style={reduced ? undefined : ({ "--a": amount } as MotionStyle)}>
+      <a
+        className="project-art-link"
+        href={project.href}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`View ${project.title} source on GitHub`}
+      >
+        <span className="build-guides" aria-hidden="true" />
+        <div className={`project-visual visual-${project.art}`}>
+          <span className="project-status mono">{project.status}</span>
+          <div className="build-art" aria-hidden="true">
+            {project.art === "infiniv" ? (
+              <div className="infinity-art">
+                ∞<span>CONNECTED BY POSSIBILITY</span>
+              </div>
+            ) : project.art === "physics" ? (
+              <div className="physics-art">
+                <span className="physics-floor" />
+                <i className="ball ball-one" />
+                <i className="ball ball-two" />
+                <i className="ball ball-three" />
+                <i className="physics-cube" />
+                <span className="physics-label mono">
+                  GRAVITY IS JUST THE BEGINNING.
+                </span>
+              </div>
+            ) : (
+              <div className="world-art">
+                {Array.from({ length: 18 }, (_, i) => (
+                  <i
+                    key={i}
+                    style={{ height: `${30 + ((i * 37) % 95)}px` }}
+                  />
+                ))}
+                <span className="world-label mono">
+                  BUILD YOUR OWN WORLD.
+                </span>
+              </div>
+            )}
+          </div>
+          <span className="project-open">
+            <ArrowUpRight size={21} />
+          </span>
+        </div>
+      </a>
+      <p className={`build-line mono${done ? " is-done" : ""}`} aria-hidden="true">
+        <span className="build-bar"><i /></span>
+        {done ? <><Check size={13} /> ASSEMBLED</> : <>{phases[phase]} <motion.span>{percent}</motion.span></>}
+      </p>
+      <div className="project-meta">
+        <div>
+          <span className="mono eyebrow">{project.category}</span>
+          <h3><a href={project.href} target="_blank" rel="noreferrer">{project.title}<ArrowUpRight size={19} /></a></h3>
+          <p>{project.detail}</p>
+        </div>
+        <span className="mono project-tech">{project.tech}</span>
+      </div>
+    </motion.article>
+  );
+}
+
+function DemoDialog({ onClose, triggerRef }: { onClose: () => void; triggerRef: React.RefObject<HTMLButtonElement> }) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const element = dialog.current;
+    const trigger = triggerRef.current;
+    const previousOverflow = document.body.style.overflow;
+    element?.showModal();
+    document.body.style.overflow = "hidden";
+    return () => {
+      element?.close();
+      document.body.style.overflow = previousOverflow;
+      trigger?.focus({ preventScroll: true });
+    };
+  }, [triggerRef]);
   return (
     <dialog
       className="demo-dialog"
-      ref={(element) => {
-        if (element && !element.open) element.showModal();
-      }}
+      ref={dialog}
       onCancel={onClose}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();

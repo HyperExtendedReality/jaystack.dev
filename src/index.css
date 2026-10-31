@@ -40,6 +40,10 @@
 
 @layer base {
   :root {
+    --scrollbar-track: #10120f;
+    --scrollbar-thumb: #63705b;
+    --scrollbar-hover: #929f87;
+    --scrollbar-active: #c8ff4a;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -134,7 +138,7 @@
   html {
     scroll-behavior: smooth;
     background: #0b0d0c;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   body {
@@ -144,7 +148,7 @@
     min-width: 320px;
     min-height: 100svh;
     margin: 0;
-    overflow-x: hidden;
+    overflow-x: clip;
     font-family: Inter, "Helvetica Neue", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     text-rendering: optimizeLegibility;
   }
@@ -205,19 +209,30 @@
 
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0d0c;
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 3px solid #0b0d0c;
+  border: 2px solid var(--scrollbar-track);
   border-radius: 999px;
-  background: rgba(244, 241, 232, 0.22);
+  background: var(--scrollbar-thumb);
+}
+html, * {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
+}
+html { scrollbar-gutter: stable; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
+::-webkit-scrollbar-thumb:active { background: var(--scrollbar-active); }
+@media (forced-colors: active) {
+  html, * { scrollbar-color: auto; }
 }
 
-section:not(#home) {
+section:not(#home, #projects, #skills) {
   content-visibility: auto;
   contain-intrinsic-size: auto 900px;
 }
