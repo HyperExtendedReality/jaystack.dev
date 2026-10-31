@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 const links = [
   { id: "projects", label: "Work" },
+  { id: "ai", label: "AI" },
   { id: "about", label: "About" },
   { id: "skills", label: "Expertise" },
 ];

@@ -28,7 +28,7 @@ export default function Hero({ onAsk }: { onAsk: () => void }) {
     <motion.section ref={hero} id="home" className="studio-hero" aria-labelledby="hero-title" style={{ "--p": progress } as MotionStyle} onPointerMove={tilt}>
       <div className="hero-backdrop" aria-hidden="true" />
       <div className="hero-topline mono">
-        <span>SOFTWARE ENGINEER · FULL-STACK WEB · GAME DEVELOPER</span>
+        <span>SOFTWARE ENGINEER · FULL-STACK WEB · GAMES · APPLIED AI</span>
         <span className="location">BASED IN ORLANDO, FL ↗</span>
       </div>
       <div className="hero-layout">

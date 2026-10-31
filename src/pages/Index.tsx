@@ -6,6 +6,8 @@ import About from "@/components/About";
 import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Contact from "@/components/Contact";
+import AiLab from "@/components/AiLab";
+import StackMarquee from "@/components/StackMarquee";
 import Navigation from "@/components/Navigation";
 import "./portfolio.css";
 export default function Index() {
@@ -25,7 +27,7 @@ export default function Index() {
         observer.unobserve(entry.target);
       });
     }, { threshold: 0.12 });
-    root.current.querySelectorAll(".section-kicker, .section-heading, .about-art, .process-strip > div")
+    root.current.querySelectorAll(".section-kicker, .section-heading, .about-art, .process-strip > div, .build-card-lg, .commerce-lab, .ai-card")
       .forEach((element) => observer.observe(element));
     return () => { observer.disconnect(); animations.forEach((animation) => animation.cancel()); };
   }, [reduced]);
@@ -38,7 +40,9 @@ export default function Index() {
       <Navigation />
       <main id="main-content" tabIndex={-1}>
         <Hero onAsk={() => setChatOpen(true)} />
+        <StackMarquee />
         <Projects />
+        <AiLab onAsk={() => setChatOpen(true)} />
         <About />
         <Skills />
         <Contact />

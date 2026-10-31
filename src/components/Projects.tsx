@@ -3,6 +3,7 @@ import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform,
 import { ArrowUpRight, Github, X, ArrowRight, Check } from "lucide-react";
 import { PIN_QUERY, useMediaQuery, useScrollVar } from "@/hooks/use-scroll-var";
 import FungEyeDemo from "./fungeye_demo/fungeye-demo";
+import Builds from "./Builds";
 import phoneHome from "../assets/home-dark.webp";
 import phoneResults from "../assets/results.webp";
 
@@ -69,6 +70,7 @@ export default function Projects() {
       </div>
       <motion.article
         ref={featured}
+        id="fungeye"
         style={{ "--p": featuredProgress } as MotionStyle}
         className="featured-work"
         initial={{ opacity: 0, y: reducedMotion ? 0 : 35 }}
@@ -146,6 +148,7 @@ export default function Projects() {
           </span>
         </div>
       </motion.article>
+      <Builds />
       <div className="assembly" ref={assembly}>
         <div className="assembly-stage">
           <h3 className="assembly-title">Open source, <em>on the workbench.</em></h3>

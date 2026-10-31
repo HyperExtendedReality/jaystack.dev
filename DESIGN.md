@@ -80,6 +80,14 @@ Lime primary action on dark surfaces; dark green primary action on contact paper
 
 Anchor navigation to work, about, expertise and contact. Mobile navigation focuses the first link when opened and restores the toggle on Escape. Project artwork and titles both link to source; project status stays visible. No filtering or pagination is needed for this small curated selection.
 
+### Projects and demos
+
+Work leads with FungEye, then five full-stack builds in browser frames (real screenshots in src/assets/projects), the Commerce Lab mosaic, and the open-source assembly. Builds with a live demo link to static copies in public/demos/ (Orbit Workspace in demo mode, Orbit Revenue, PeopleFlow); rebuild those from C:/Dev/Web with base paths under /jaystack.dev/demos/ (set MSYS_NO_PATHCONV=1 in Git Bash). The others say they are screens from a local build. Stack chips use brand-coloured Simple Icons; C# uses the .NET mark. The FungEye demo maps hotspots in screenshot pixels (757 x 1700), keeps a back stack, and marks the next step with a pulsing ring.
+
+### Applied AI
+
+The AI section pairs each claim with something on the page: the FungEye scan flow, Pip (Ask Pip opens the assistant), and the model pipeline. Pip's knowledge lives in src/data/portfolio-knowledge.json; append new notes at the end because the offline prompts reference notes by index.
+
 ### Forms and overlays
 
 Contact fields use labels, inline validation, aria-invalid, associated correction hints, and focus on the first error. Entered values survive failures, and direct email is always available. Preserve the existing EmailJS delivery integration. Test delivery only with a controlled stub or explicit approval for a real message. FungEye's native dialog locks background scrolling and restores its trigger on close.

@@ -11,7 +11,7 @@
     "title": "Engineering toolkit",
     "url": "#skills",
     "question": "What is his tech stack?",
-    "facts": "Full-stack: React, TypeScript, JavaScript, Svelte, Node.js, PostgreSQL, C#/.NET. Mobile and applied AI: React Native, Python, TensorFlow, YOLO, on-device inference. Games and immersive work: Three.js, React Three Fiber, C++, Lua, WebAssembly, VR/XR. Systems and tools: Rust, C++, SpacetimeDB, .NET, Git, WebView2. His README also lists Go, MariaDB and MongoDB.",
+    "facts": "Full-stack: React, TypeScript, JavaScript, Svelte, Node.js, PostgreSQL, C#/.NET. Mobile and applied AI: React Native, Python, TensorFlow, YOLO, on-device inference. Games and immersive work: Three.js, React Three Fiber, C++, Lua, WebAssembly, VR/XR. Systems and tools: Rust, C++, SpacetimeDB, .NET, Git, WebView2. Web projects in the portfolio also use Ruby on Rails, Python with Django and HTMX, Angular, Next.js, Drizzle ORM, Strapi, Payload, Medusa and Shopify Hydrogen. His README also lists Go, MariaDB and MongoDB.",
     "constraints": "Do not assign years of experience or expertise levels to individual technologies."
   },
   {
@@ -56,5 +56,28 @@
     "url": "#contact",
     "question": "Is he available? How do I reach him?",
     "facts": "The portfolio says Jay is open to full-stack opportunities. Email: jaystack.dev@gmail.com. GitHub: https://github.com/HyperExtendedReality. LinkedIn: https://linkedin.com/in/jb-hyperxr/. Location: Orlando, Florida. Exact start date, salary expectations, work authorization, remote/relocation preferences, degree, certifications and total years of experience are not supplied; ask Jay directly. The assistant cannot schedule interviews, accept offers or send messages on his behalf."
+  },
+  {
+    "id": "builds",
+    "title": "Full-stack builds",
+    "url": "#projects",
+    "question": "What full-stack web apps has he built?",
+    "facts": "The Work section shows five full-stack builds. Orbit Workspace is a project command center with a Ruby on Rails 8 API and a React 19 + TypeScript + TanStack Query frontend, with Rails and Vitest tests; its live demo runs on sample data saved in the browser. Stockroom is a warehouse inventory dashboard in Python with Django templates and HTMX live search. Orbit Revenue is an Angular 20 customer-success SaaS concept with fictional sample accounts and a live demo. PeopleFlow is a dependency-free HTML, CSS and JavaScript HRM dashboard with a live demo. Meridian is a headless commerce CMS in Next.js, TypeScript, PostgreSQL and Drizzle ORM with Argon2id passwords, revocable hashed sessions, role-based access, login throttling and audit logging.",
+    "constraints": "These are portfolio demos with sample data, not deployed customer products. Do not invent users, revenue or performance numbers."
+  },
+  {
+    "id": "commerce",
+    "title": "Commerce Lab",
+    "url": "#projects",
+    "question": "Has he built e-commerce sites?",
+    "facts": "Commerce Lab is four independent storefront demos, each on a different platform: Atelier (Strapi 5 with a Next.js 16 frontend), Glow Dept. (Payload 3 embedded in Next.js 16), Summit Supply (Medusa 2 with PostgreSQL and Redis, plus a Next.js storefront) and Still Coffee (Shopify Hydrogen with React Router 7 and the Storefront API). Each falls back to a preview catalog until its backend is connected.",
+    "constraints": "They are demos, not live stores; checkout is disabled or test-only."
+  },
+  {
+    "id": "pip",
+    "title": "How Pip works",
+    "url": "#ai",
+    "question": "How does this assistant work?",
+    "facts": "Pip is the assistant on this portfolio, built by Jay. A small Node.js server calls the OpenAI Responses API and requires structured JSON output whose sources must be IDs from a curated knowledge file, so answers stay grounded and cite their notes. Requests are validated with Zod and protected by an origin allowlist, per-client rate limits and a request budget. When the AI is offline, Pip shows the saved notes instead."
   }
 ]

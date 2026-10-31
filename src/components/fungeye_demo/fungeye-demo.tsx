@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import home_dark from "../../assets/home-dark.webp";
 import home_light from "../../assets/home-light.webp";
 import camera from "../../assets/camera.webp";
@@ -12,306 +12,184 @@ import settings_light from "../../assets/settings-light.webp";
 import donation_dark from "../../assets/donation-dark.webp";
 import donation_light from "../../assets/donation-light.webp";
 
-const IMAGES = {
-  home_dark: home_dark,
-  home_light: home_light,
-  camera: camera,
-  results: results,
-  library_dark: library_dark,
-  library_light: library_light,
-  afterscan_dark: afterscan_dark,
-  afterscan_light: afterscan_light,
-  settings_dark: settings_dark,
-  settings_light: settings_light,
-  donation_dark: donation_dark,
-  donation_light: donation_light,
+type Screen = "home" | "camera" | "results" | "library" | "settings" | "donation";
+type Action = Screen | "back" | "theme" | "save";
+// rect is [x1, y1, x2, y2] in screenshot pixels (every screen is 757 x 1700).
+type Spot = { label: string; rect: [number, number, number, number]; to?: Action; note?: string; primary?: boolean; round?: boolean; savedOnly?: boolean };
+
+const W = 757;
+const H = 1700;
+
+const screens: Record<Screen, { title: string; hint: string; image: (dark: boolean, saved: boolean) => string }> = {
+  home: { title: "Home", hint: "Tap Start Scan to open the camera.", image: (d) => (d ? home_dark : home_light) },
+  camera: { title: "Camera", hint: "Tap the shutter to identify the mushroom.", image: () => camera },
+  results: { title: "Identification result", hint: "Save the find to your collection.", image: () => results },
+  library: {
+    title: "My collection",
+    hint: "Saved finds live here, offline. Scan again or open settings.",
+    image: (d, saved) => (saved ? (d ? afterscan_dark : afterscan_light) : d ? library_dark : library_light),
+  },
+  settings: { title: "Settings", hint: "The on-device model and camera options. Tap Support FungEye.", image: (d) => (d ? settings_dark : settings_light) },
+  donation: { title: "Support", hint: "Community funding pays for model training. Tap back to return.", image: (d) => (d ? donation_dark : donation_light) },
 };
 
-type DemoScreen = "home" | "camera" | "results" | "library" | "settings" | "donation";
+const spots: Record<Screen, Spot[]> = {
+  home: [
+    { label: "Toggle FungEye color theme", rect: [639, 140, 716, 217], to: "theme", round: true },
+    { label: "Start a mushroom scan", rect: [49, 1390, 708, 1487], to: "camera", primary: true },
+    { label: "Open mushroom collection", rect: [52, 1520, 149, 1611], to: "library" },
+    { label: "Open data donation", rect: [175, 1520, 578, 1611], to: "donation" },
+    { label: "Open settings", rect: [606, 1520, 703, 1611], to: "settings" },
+  ],
+  camera: [
+    { label: "Return to FungEye home", rect: [39, 87, 252, 150], to: "home" },
+    { label: "Open data donation", rect: [563, 93, 718, 144], to: "donation" },
+    { label: "Identify from a photo", rect: [295, 1335, 462, 1398], to: "results" },
+    { label: "Capture mushroom image", rect: [307, 1481, 450, 1625], to: "results", primary: true, round: true },
+    { label: "Open mushroom collection", rect: [68, 1504, 165, 1601], to: "library" },
+    { label: "Open settings", rect: [590, 1504, 687, 1601], to: "settings" },
+  ],
+  results: [
+    { label: "Close result", rect: [35, 122, 120, 208], to: "back", round: true },
+    { label: "Share result", rect: [43, 1510, 256, 1611], note: "In the app this opens the phone's share sheet." },
+    { label: "Save result to collection", rect: [285, 1510, 712, 1611], to: "save", primary: true },
+  ],
+  library: [
+    { label: "Go back", rect: [29, 87, 126, 184], to: "back", round: true },
+    { label: "Open data donation", rect: [43, 353, 714, 495], to: "donation" },
+    { label: "Open Common Puffball result", rect: [23, 693, 363, 1126], to: "results", savedOnly: true },
+    { label: "Open FungEye camera", rect: [326, 1493, 431, 1597], to: "camera", primary: true, round: true },
+    { label: "Open settings", rect: [543, 1543, 650, 1640], to: "settings" },
+  ],
+  settings: [
+    { label: "Go back", rect: [39, 122, 124, 208], to: "back", round: true },
+    { label: "Toggle FungEye color theme", rect: [615, 122, 701, 208], to: "theme", round: true },
+    { label: "Support FungEye", rect: [39, 1316, 718, 1448], to: "donation", primary: true },
+  ],
+  donation: [
+    { label: "Go back", rect: [35, 122, 120, 208], to: "back", round: true, primary: true },
+    { label: "Donate $15", rect: [43, 1576, 712, 1689], note: "Demo only. No payment is taken." },
+  ],
+};
+
+const steps: { label: string; path: Screen[] }[] = [
+  { label: "Home", path: ["home"] },
+  { label: "Scan", path: ["home", "camera"] },
+  { label: "Identify", path: ["home", "camera", "results"] },
+  { label: "Collection", path: ["home", "library"] },
+  { label: "Settings", path: ["home", "settings"] },
+];
+
+const pct = (value: number, total: number) => `${(value / total) * 100}%`;
 
 const FungEyeDemo = () => {
-  const [screen, setScreen] = useState<DemoScreen>("home");
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [history, setHistory] = useState<Screen[]>(["home"]);
+  const [dark, setDark] = useState(true);
+  const [saved, setSaved] = useState(false);
+  const [note, setNote] = useState("");
+  const noteTimer = useRef<number>();
+  const screen = history[history.length - 1];
 
-  const getActiveImage = () => {
-    switch (screen) {
-      case "home":
-        return isDarkMode ? IMAGES.home_dark : IMAGES.home_light;
-      case "camera":
-        return IMAGES.camera;
-      case "results":
-        return IMAGES.results;
-      case "library":
-        return isDarkMode ? IMAGES.library_dark : IMAGES.library_light;
-      case "settings":
-        return isDarkMode ? IMAGES.settings_dark : IMAGES.settings_light;
-      case "donation":
-        return isDarkMode ? IMAGES.donation_dark : IMAGES.donation_light;
-      default:
-        return IMAGES.home_dark;
+  // Warm the cache so screen changes never flash an empty phone.
+  useEffect(() => {
+    [home_dark, home_light, camera, results, library_dark, library_light, afterscan_dark, afterscan_light, settings_dark, settings_light, donation_dark, donation_light]
+      .forEach((src) => { new Image().src = src; });
+    return () => window.clearTimeout(noteTimer.current);
+  }, []);
+
+  const act = (spot: Spot) => {
+    window.clearTimeout(noteTimer.current);
+    setNote(spot.note ?? "");
+    if (spot.note) noteTimer.current = window.setTimeout(() => setNote(""), 2600);
+    if (!spot.to) return;
+    if (spot.to === "theme") return setDark((d) => !d);
+    if (spot.to === "back") return setHistory((h) => (h.length > 1 ? h.slice(0, -1) : h));
+    if (spot.to === "save") {
+      setSaved(true);
+      return setHistory(["home", "library"]);
     }
+    const to = spot.to;
+    setHistory((h) => (to === "home" ? ["home"] : [...h, to]));
   };
 
   return (
     <div className="fungeye-demo">
       <div className="fungeye-phone">
-        <img
-          src={getActiveImage()}
-          alt={`FungEye ${screen} screen`}
-          className="screen-image"
-          loading="lazy"
-          decoding="async"
-        />
-
-        {screen !== "camera" && screen !== "results" && (
-          <button
-            type="button"
-            aria-label="Toggle FungEye color theme"
-            className="hotspot theme-toggle"
-            onClick={() => setIsDarkMode(!isDarkMode)}
-          />
-        )}
-
-        {screen === "home" && (
-          <>
+        <img src={screens[screen].image(dark, saved)} alt={`FungEye ${screens[screen].title} screen`} className="screen-image" decoding="async" />
+        {spots[screen].filter((spot) => !spot.savedOnly || saved).map((spot) => {
+          const [x1, y1, x2, y2] = spot.rect;
+          const style: CSSProperties = { left: pct(x1, W), top: pct(y1, H), width: pct(x2 - x1, W), height: pct(y2 - y1, H) };
+          return (
             <button
+              key={spot.label}
               type="button"
-              aria-label="Start a mushroom scan"
-              className="hotspot btn-start-scan"
-              onClick={() => setScreen("camera")}
+              aria-label={spot.label}
+              title={spot.label}
+              className={`hotspot${spot.primary ? " is-primary" : ""}${spot.round ? " is-round" : ""}`}
+              style={style}
+              onClick={() => act(spot)}
             />
-            <button
-              type="button"
-              aria-label="Open mushroom collection"
-              className="hotspot nav-item-left"
-              onClick={() => setScreen("library")}
-            />
-            <button
-              type="button"
-              aria-label="Open data donation"
-              className="hotspot nav-item-center"
-              onClick={() => setScreen("donation")}
-            />
-            <button
-              type="button"
-              aria-label="Open settings"
-              className="hotspot nav-item-right"
-              onClick={() => setScreen("settings")}
-            />
-          </>
-        )}
-
-        {screen === "camera" && (
-          <>
-            <button
-              type="button"
-              aria-label="Capture mushroom image"
-              className="hotspot btn-shutter"
-              onClick={() => setScreen("results")}
-            />
-            <button
-              type="button"
-              aria-label="Return to FungEye home"
-              className="hotspot btn-back-home"
-              onClick={() => setScreen("home")}
-            />
-            <button
-              type="button"
-              aria-label="Open mushroom collection"
-              className="hotspot nav-item-left"
-              onClick={() => setScreen("library")}
-            />
-            <button
-              type="button"
-              aria-label="Open settings"
-              className="hotspot nav-item-right"
-              onClick={() => setScreen("settings")}
-            />
-          </>
-        )}
-
-        {screen === "results" && (
-          <>
-            <button
-              type="button"
-              aria-label="Save result to collection"
-              className="hotspot btn-save-collection"
-              onClick={() => setScreen("library")}
-            />
-            <button
-              type="button"
-              aria-label="Close result"
-              className="hotspot btn-close-results"
-              onClick={() => setScreen("camera")}
-            />
-          </>
-        )}
-
-        {(screen === "library" ||
-          screen === "settings" ||
-          screen === "donation") && (
-          <button
-            type="button"
-            aria-label="Return to FungEye home"
-            className="hotspot btn-back-arrow"
-            onClick={() => setScreen("home")}
-          />
-        )}
-
-        {screen === "library" && (
-          <>
-            <button
-              type="button"
-              aria-label="Open FungEye camera"
-              className="hotspot btn-fab-camera"
-              onClick={() => setScreen("camera")}
-            />
-            <button
-              type="button"
-              aria-label="Open settings"
-              className="hotspot nav-item-right"
-              onClick={() => setScreen("settings")}
-            />
-          </>
-        )}
+          );
+        })}
+        {note && <p className="fungeye-note" role="status">{note}</p>}
+      </div>
+      <div className="fungeye-guide">
+        <p aria-live="polite"><strong>{screens[screen].title}.</strong> {screens[screen].hint}</p>
+        <nav aria-label="Jump to a FungEye screen">
+          {steps.map(({ label, path }) => (
+            <button key={label} type="button" aria-current={path[path.length - 1] === screen ? "step" : undefined} onClick={() => setHistory(path)}>
+              {label}
+            </button>
+          ))}
+        </nav>
       </div>
 
       <style>{`
-        .fungeye-demo {
-          display: flex;
-          width: 100%;
-          justify-content: center;
-        }
-
+        .fungeye-demo { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
         .fungeye-phone {
           position: relative;
           width: 100%;
           max-width: 19rem;
-          aspect-ratio: 375 / 812;
-          border-radius: clamp(1.75rem, 11.73%, 2.75rem);
-          border: clamp(0.45rem, 3.2cqw, 0.75rem) solid #171a17;
+          aspect-ratio: ${W} / ${H};
+          border-radius: 2.4rem;
+          border: 0.6rem solid #171a17;
           overflow: hidden;
           background: #000;
-          box-shadow:
-            0 2rem 5rem -2rem rgba(0, 0, 0, 0.95),
-            0 0 0 1px rgba(255, 255, 255, 0.1),
-            inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-          container-type: inline-size;
+          box-shadow: 0 2rem 5rem -2rem rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.1);
         }
-
-        .fungeye-phone::before {
-          content: "";
-          position: absolute;
-          z-index: 30;
-          left: 50%;
-          top: 0.6%;
-          width: 28%;
-          height: 2.5%;
-          transform: translateX(-50%);
-          border-radius: 999px;
-          background: #111411;
-          pointer-events: none;
-        }
-
-        .fungeye-phone .screen-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-
+        .fungeye-phone .screen-image { width: 100%; height: 100%; display: block; }
         .fungeye-phone .hotspot {
           position: absolute;
-          cursor: pointer;
           border: 0;
           padding: 0;
-          border-radius: 0.75rem;
+          border-radius: 12px;
           background: transparent;
-          z-index: 20;
+          cursor: pointer;
+          z-index: 2;
+          transition: background-color .2s, box-shadow .2s;
         }
-
-        .fungeye-phone .hotspot:focus-visible {
-          outline: 2px solid #86efac;
-          outline-offset: -2px;
-          background: rgba(134, 239, 172, 0.12);
+        .fungeye-phone .hotspot.is-round { border-radius: 50%; }
+        .fungeye-phone .hotspot:hover { background: rgba(200, 255, 74, 0.14); box-shadow: 0 0 0 2px rgba(200, 255, 74, 0.7); }
+        .fungeye-phone .hotspot:focus-visible { outline: 2px solid #c8ff4a; outline-offset: 2px; background: rgba(200, 255, 74, 0.14); }
+        .fungeye-phone .hotspot.is-primary { box-shadow: 0 0 0 2px rgba(200, 255, 74, 0.85); animation: fungeye-pulse 1.8s ease-out infinite; }
+        @keyframes fungeye-pulse { 0% { box-shadow: 0 0 0 2px rgba(200, 255, 74, 0.9); } 100% { box-shadow: 0 0 0 12px rgba(200, 255, 74, 0); } }
+        .fungeye-note {
+          position: absolute; left: 8%; right: 8%; bottom: 13%; z-index: 3;
+          padding: 10px 12px; border-radius: 12px;
+          background: #10120fee; color: #f1f0e9; font-size: 12px; line-height: 1.5; text-align: center;
+          box-shadow: 0 12px 30px #0008;
         }
-
-        .fungeye-phone .theme-toggle {
-          top: 7.4%;
-          right: 6.7%;
-          width: 12%;
-          height: 5.55%;
+        .fungeye-guide { width: 100%; max-width: 22rem; text-align: center; }
+        .fungeye-guide p { min-height: 3.2em; font-size: 13px; line-height: 1.6; color: #b9c2ae; }
+        .fungeye-guide strong { color: #f1f0e9; font-weight: 600; }
+        .fungeye-guide nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 10px; }
+        .fungeye-guide nav button {
+          min-height: 36px; padding: 0 12px; border-radius: 40px;
+          border: 1px solid #ffffff2a; color: #c3c9b9; font-size: 12px; background: transparent; cursor: pointer;
         }
-        .fungeye-phone .btn-back-arrow {
-          top: 5.55%;
-          left: 5.3%;
-          width: 13.4%;
-          height: 6.2%;
-        }
-        .fungeye-phone .btn-close-results {
-          top: 6.15%;
-          left: 5.3%;
-          width: 13.4%;
-          height: 6.2%;
-        }
-
-        .fungeye-phone .btn-start-scan {
-          bottom: 11.7%;
-          left: 10%;
-          width: 80%;
-          height: 6.8%;
-        }
-
-        .fungeye-phone .btn-shutter {
-          bottom: 4.25%;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 18.4%;
-          aspect-ratio: 1;
-          border-radius: 50%;
-        }
-        .fungeye-phone .btn-back-home {
-          top: 7.4%;
-          left: 6.7%;
-          width: 12%;
-          height: 5.55%;
-        }
-
-        .fungeye-phone .btn-save-collection {
-          bottom: 4.9%;
-          right: 8%;
-          width: 55%;
-          height: 7.4%;
-        }
-
-        .fungeye-phone .btn-fab-camera {
-          bottom: 5.55%;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 20%;
-          aspect-ratio: 1;
-          border-radius: 50%;
-        }
-
-        .fungeye-phone .nav-item-left {
-          bottom: 3.7%;
-          left: 5%;
-          width: 16%;
-          height: 7.4%;
-        }
-        .fungeye-phone .nav-item-center {
-          bottom: 3.7%;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 48%;
-          height: 7.4%;
-        }
-        .fungeye-phone .nav-item-right {
-          bottom: 3.7%;
-          right: 5%;
-          width: 16%;
-          height: 7.4%;
-        }
+        .fungeye-guide nav button:hover { border-color: #c8ff4a80; color: #f1f0e9; }
+        .fungeye-guide nav button[aria-current] { background: #c8ff4a; border-color: #c8ff4a; color: #10120f; font-weight: 600; }
+        @media (prefers-reduced-motion: reduce) { .fungeye-phone .hotspot.is-primary { animation: none; } }
       `}</style>
     </div>
   );
